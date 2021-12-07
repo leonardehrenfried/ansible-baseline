@@ -23,8 +23,20 @@
     - http2
     - rewrite
     - md
-    - proxy
-    - proxy_http
+    - wsgi
   notify: Restart apache
 
+- name: Install systemd files
+  template: src=systemd/{{ item }} dest=/etc/systemd/system/
+  with_items:
+    - apache-reload.service
+    - apache-reload.timer
+  notify: Restart tilemaker
+
+- name: Start apache-reload.timer
+  systemd:
+    name: apache-reload.timer
+    state: started
+    enabled: yes
+    daemon_reload: yes
 

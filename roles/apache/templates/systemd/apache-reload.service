@@ -1,0 +1,8 @@
+[Unit]
+Description=Reload apache
+
+[Service]
+ExecStart=systemctl reload apache2.service
+
+[Install]
+WantedBy=multi-user.target
