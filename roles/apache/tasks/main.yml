@@ -23,7 +23,6 @@
     - http2
     - rewrite
     - md
-    - wsgi
   notify: Restart apache
 
 - name: Install systemd files
