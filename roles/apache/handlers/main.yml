@@ -1,0 +1,11 @@
+---
+- name: Check apache conf
+  command: "/usr/sbin/apachectl configtest"
+  become: yes
+  listen: "Restart apache"
+
+- name: Restart Apache service
+  service:
+    name: apache2
+    state: restarted
+  listen: "Restart apache"

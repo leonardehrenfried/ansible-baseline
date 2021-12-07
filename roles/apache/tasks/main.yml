@@ -1,0 +1,30 @@
+---
+- name: Install base packages
+  package:
+    name:
+      - apache2
+      - libapache2-mod-md
+    state: present
+
+- name: Delete content & directory
+  file:
+    state: absent
+    path: /etc/apache2/sites-enabled/000-default.conf
+
+- name: Enable the Apache2 modules
+  community.general.apache2_module:
+    state: present
+    name: "{{ item }}"
+    ignore_configcheck: True
+    force: True
+  with_items:
+    - headers
+    - ssl
+    - http2
+    - rewrite
+    - md
+    - proxy
+    - proxy_http
+  notify: Restart apache
+
+
