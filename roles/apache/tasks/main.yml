@@ -30,7 +30,6 @@
   with_items:
     - apache-reload.service
     - apache-reload.timer
-  notify: Restart tilemaker
 
 - name: Start apache-reload.timer
   systemd:
