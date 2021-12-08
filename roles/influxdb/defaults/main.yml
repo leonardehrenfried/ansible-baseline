@@ -1,0 +1,3 @@
+---
+influxdb_private_port: 8086
+influxdb_public_port: 8087
