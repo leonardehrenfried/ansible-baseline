@@ -1,1 +1,7 @@
 ---
+galaxy_info:
+  author: "Leonard Ehrenfried"
+  description: 'Reusable apache role that automatically handles Lets Encrypt'
+  license: Apache License 2.0
+  min_ansible_version: '2.9.10'
+dependencies: []
