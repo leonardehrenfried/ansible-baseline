@@ -19,6 +19,6 @@
     src: "{{ item }}"
     dest: /etc/apache2/sites-enabled/influxdb-proxy.conf
   with_items:
-    - grafana.apache.conf
+    - apache.conf
   notify: Restart apache
 
