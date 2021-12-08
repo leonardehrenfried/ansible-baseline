@@ -23,6 +23,7 @@
     - http2
     - rewrite
     - md
+    - proxy
   notify: Restart apache
 
 - name: Install systemd files
