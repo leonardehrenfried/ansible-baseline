@@ -2,4 +2,4 @@
 collections:
 
 dependencies:
-  - leonardehrenfried.baseline.apache
+  - apache
