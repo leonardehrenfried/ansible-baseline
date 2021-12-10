@@ -1,0 +1,8 @@
+---
+
+- name: Restart Grafana
+  service:
+    name: grafana
+    state: restarted
+    daemon_reload: yes
+  listen: "Restart Grafana"

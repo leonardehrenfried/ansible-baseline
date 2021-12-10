@@ -1,0 +1,37 @@
+---
+
+- name: Install systemd files
+  template:
+    src: "{{ item }}"
+    dest: /etc/systemd/system/
+  with_items:
+    - grafana.service
+  notify: Restart Grafana
+
+- name: Create conf directory
+  ansible.builtin.file:
+    path: /etc/grafana/provisioning/datasources/
+    state: directory
+
+- name: Copy datasource file
+  ansible.builtin.template:
+    src: influxdb.yml
+    dest: /etc/grafana/provisioning/datasources/influxdb.yml
+
+- name: Install apache files
+  template:
+    src: "{{ item }}"
+    dest: /etc/apache2/sites-enabled/{{ grafana_domain_name }}.conf
+  with_items:
+    - grafana.apache.conf
+  notify: Restart apache
+
+- name: Start grafana
+  systemd:
+    state: started
+    name: "{{ item }}"
+    enabled: yes
+    daemon_reload: yes
+  with_items:
+    - grafana.service
+

@@ -1,0 +1,10 @@
+---
+apiVersion: 1
+
+datasources:
+  - name: InfluxDB
+    type: influxdb
+    url: https://{{ influxdb_domain_name }}:{{ influxdb_public_port }}
+    database: {{ influxdb_database }}
+    user: {{ influxdb_username }}
+    password: {{ influxdb_password }}

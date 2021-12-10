@@ -1,0 +1,25 @@
+[Unit]
+Description=Grafana on podman
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+TimeoutStopSec=70
+
+ExecStart=podman run \
+    --rm -it \
+    -p {{ grafana_port }}:3000 \
+    --name=grafana \
+    --log-driver=journald \
+    -v grafana-storage:/var/lib/grafana \
+    -v /etc/grafana/provisioning/:/etc/grafana/provisioning/ \
+    docker.io/grafana/grafana-oss:8.2.2
+
+ExecStop=-podman stop grafana
+ExecStop=-podman rm grafana
+
+[Install]
+WantedBy=multi-user.target default.target
+
