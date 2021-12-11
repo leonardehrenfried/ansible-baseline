@@ -14,8 +14,14 @@
 
 - name: Create a user on localhost using default login credentials
   community.general.influxdb_user:
+    admin: yes
     user_name: "{{ influxdb_username }}"
     user_password: "{{ influxdb_password }}"
+    grants:
+      - database: '{{ influxdb_database }}'
+        privilege: 'WRITE'
+      - database: '{{ influxdb_database }}'
+        privilege: 'READ'
 
 - name: Install influx config
   template:
