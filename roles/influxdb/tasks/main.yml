@@ -11,8 +11,11 @@
   community.general.influxdb_database:
       hostname: "localhost"
       database_name: "{{ influxdb_database }}"
-      username: "{{ influxdb_username }}"
-      password: "{{ influxdb_password }}"
+
+- name: Create a user on localhost using default login credentials
+  community.general.influxdb_user:
+    user_name: "{{ influxdb_username }}"
+    user_password: "{{ influxdb_password }}"
 
 - name: Install influx config
   template:
