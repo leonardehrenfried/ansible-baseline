@@ -14,6 +14,14 @@
       username: "{{ influxdb_username }}"
       password: "{{ influxdb_password }}"
 
+- name: Install influx config
+  template:
+    src: "{{ item }}"
+    dest: /etc/influxdb/
+  with_items:
+    - influxdb.conf
+  notify: Restart influxdb
+
 - name: Install apache files
   template:
     src: "{{ item }}"
