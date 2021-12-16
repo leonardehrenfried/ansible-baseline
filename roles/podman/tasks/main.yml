@@ -4,6 +4,7 @@
     state: latest
     default_release: bullseye-backports
     name:
+      - dbus-user-session
       - uidmap
       - slirp4netns
       - podman
