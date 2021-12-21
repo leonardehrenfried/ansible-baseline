@@ -5,6 +5,7 @@
     default_release: bullseye-backports
     name:
       - dbus-user-session
+      - crun
       - uidmap
       - slirp4netns
       - podman
