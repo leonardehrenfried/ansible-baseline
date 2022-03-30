@@ -17,7 +17,7 @@ ExecStart=podman run \
     -v /etc/grafana/provisioning/:/etc/grafana/provisioning/ \
     -e GF_AUTH_ANONYMOUS_ENABLED={{ grafana_allow_anon_access | lower }} \
     -e GF_SERVER_ROOT_URL="https://{{ grafana_domain_name }}/" \
-    docker.io/grafana/grafana-oss:8.3.3
+    docker.io/grafana/grafana-oss:8.4.4
 
 ExecStop=-podman stop grafana
 ExecStop=-podman rm grafana
