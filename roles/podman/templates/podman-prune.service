@@ -1,0 +1,11 @@
+[Unit]
+Description=Remove old container data (images, volumes, networks) that are older than a week
+
+[Service]
+Type=oneshot
+{% for user in podman_prune_users %}
+ExecStart=sudo -u {{ user }} podman system prune -a -f --filter until={{ podman_prune_max_age }}
+{% endfor %}
+
+[Install]
+WantedBy=multi-user.target

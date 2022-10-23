@@ -17,3 +17,15 @@
       - slirp4netns
       - podman
 
+- name: Install systemd files for podman-prune
+  template: src={{ item }} dest=/etc/systemd/system/
+  with_items:
+    - podman-prune.service
+    - podman-prune.timer
+
+- name: Start podman-prune.timer
+  systemd:
+    name: podman-prune.timer
+    state: started
+    enabled: yes
+    daemon_reload: yes
