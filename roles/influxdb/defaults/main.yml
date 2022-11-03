@@ -1,3 +1,4 @@
 ---
 influxdb_private_port: 8086
 influxdb_public_port: 8087
+influxdb_max_series: 1000000
