@@ -1,3 +1,4 @@
 ---
-podman_prune_users: []
+podman_prune_users:
+  - root
 podman_prune_max_age: 604800
