@@ -13,6 +13,7 @@ ExecStart=podman run \
     -p {{ grafana_port }}:3000 \
     --name=grafana \
     --log-driver=journald \
+    --network=host \
     -v grafana-storage:/var/lib/grafana \
     -v /etc/grafana/provisioning/:/etc/grafana/provisioning/ \
     -e GF_AUTH_ANONYMOUS_ENABLED={{ grafana_allow_anon_access | lower }} \
