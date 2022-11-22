@@ -16,7 +16,14 @@
 - name: Copy datasource file
   ansible.builtin.template:
     src: influxdb.yml
-    dest: /etc/grafana/provisioning/datasources/influxdb.yml
+    dest: /etc/grafana/provisioning/datasources/datasources.yml
+  notify: Restart grafana
+
+- name: Remove old datasource file
+  ansible.builtin.template:
+    path: /etc/grafana/provisioning/datasources/influxdb.yml
+    state: absent
+  notify: Restart grafana
 
 - name: Install apache files
   template:
