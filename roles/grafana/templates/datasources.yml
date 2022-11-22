@@ -2,7 +2,7 @@
 apiVersion: 1
 
 datasources:
-  {% if influxdb_username is defined %}
+{% if influxdb_username is defined %}
   - name: InfluxDB
     type: influxdb
     url: https://{{ influxdb_domain_name }}:{{ influxdb_public_port }}
@@ -10,8 +10,8 @@ datasources:
     user: {{ influxdb_username }}
     secureJsonData:
       password: {{ influxdb_password }}
-  {% endif %}
-  {% if postgres_username is defined %}
+{% endif %}
+{% if postgres_username is defined %}
   - name: Postgres
     type: postgres
     url: localhost:5432
@@ -19,4 +19,4 @@ datasources:
     user: {{ postgres_username }}
     secureJsonData:
       password: {{ postgres_password }}
-  {% endif %}
+{% endif %}
