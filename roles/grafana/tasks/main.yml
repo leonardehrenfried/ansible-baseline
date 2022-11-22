@@ -15,8 +15,8 @@
 
 - name: Copy datasource file
   ansible.builtin.template:
-    src: influxdb.yml
-    dest: /etc/grafana/provisioning/datasources/datasources.yml
+    src: datasources.yml
+    dest: /etc/grafana/provisioning/datasources/
   notify: Restart grafana
 
 - name: Remove old datasource file
