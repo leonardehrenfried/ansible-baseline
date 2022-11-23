@@ -1,0 +1,6 @@
+---
+- name: Install journald.conf
+  template: src={{ item }} dest=/etc/systemd/
+  with_items:
+    - journald.conf
+  notify: Restart systemd-journald
