@@ -15,8 +15,8 @@
   community.general.apache2_module:
     state: present
     name: "{{ item }}"
-    ignore_configcheck: True
-    force: True
+    ignore_configcheck: true
+    force: true
   with_items:
     - headers
     - ssl
@@ -38,5 +38,5 @@
   systemd:
     name: apache-reload.timer
     state: started
-    enabled: yes
-    daemon_reload: yes
+    enabled: true
+    daemon_reload: true

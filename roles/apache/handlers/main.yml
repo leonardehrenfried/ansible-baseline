@@ -1,7 +1,7 @@
 ---
 - name: Check apache conf
   command: "/usr/sbin/apachectl configtest"
-  become: yes
+  become: true
   listen: "Restart apache"
 
 - name: Restart Apache service
