@@ -25,6 +25,7 @@
     - md
     - proxy
     - proxy_http
+    - proxy_wstunnel
   notify: Restart apache
 
 - name: Install systemd files
