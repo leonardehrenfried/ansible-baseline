@@ -1,11 +1,4 @@
 ---
-
-- name: Add backports repo
-  apt_repository:
-    repo: "deb http://deb.debian.org/debian bullseye-backports main contrib non-free"
-    state: present
-    update_cache: true
-
 - name: Install packages
   apt:
     state: latest
