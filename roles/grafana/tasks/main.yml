@@ -25,14 +25,6 @@
     state: absent
   notify: Restart Grafana
 
-- name: Install apache files
-  template:
-    src: "{{ item }}"
-    dest: /etc/apache2/sites-enabled/{{ grafana_domain_name }}.conf
-  with_items:
-    - grafana.apache.conf
-  notify: Restart apache
-
 - name: Start grafana
   systemd:
     state: started
