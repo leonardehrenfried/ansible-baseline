@@ -1,6 +1,6 @@
 ---
 grafana_port: 3000
 grafana_allow_anon_access: false
-grafana_version: "9.2.6"
+grafana_version: "9.3.2"
 grafana_apache_aliases:
   -
