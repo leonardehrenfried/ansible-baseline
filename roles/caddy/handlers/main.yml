@@ -1,1 +1,6 @@
 ---
+- name: Restart caddy
+  ansible.builtin.systemd:
+    name: caddy
+    state: restarted
+  listen: "Restart caddy"

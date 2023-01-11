@@ -2,7 +2,6 @@
 - name: Install packages
   apt:
     state: latest
-    default_release: bullseye-backports
     name:
       - dbus-user-session
       - crun
