@@ -20,10 +20,10 @@ datasources:
     secureJsonData:
       password: {{ postgres_password }}
 {% endif %}
-{% if prometheus_host is defined %}
+{% if prometheus_source_url is defined %}
   - name: Prometheus
     type: prometheus
     # Access mode - proxy (server in the UI) or direct (browser in the UI).
     access: proxy
-    url: {{ prometheus_host }}
+    url: {{ prometheus_source_url }}
 {% endif %}
