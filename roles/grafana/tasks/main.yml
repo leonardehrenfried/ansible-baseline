@@ -1,5 +1,4 @@
 ---
-
 - name: Install systemd files
   template:
     src: "{{ item }}"
@@ -29,8 +28,8 @@
   systemd:
     state: started
     name: "{{ item }}"
-    enabled: yes
-    daemon_reload: yes
+    enabled: true
+    daemon_reload: true
   with_items:
     - grafana.service
 

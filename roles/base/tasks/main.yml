@@ -1,7 +1,7 @@
 ---
-- name: Only run "update_cache=yes" if the last one is more than a week ago
+- name: Only run "apt update" if the last one is more than a week ago
   ansible.builtin.apt:
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 604800
 
 - name: Install base packages
@@ -45,9 +45,9 @@
     groups:
       - sudo
       - systemd-journal
-    append: yes
+    append: true
     state: present
-    createhome: yes
+    createhome: true
     shell: /bin/bash
   with_items: "{{ users }}"
 

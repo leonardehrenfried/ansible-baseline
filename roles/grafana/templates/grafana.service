@@ -18,7 +18,13 @@ ExecStart=podman run \
     -v /etc/grafana/provisioning/:/etc/grafana/provisioning/ \
     -e GF_AUTH_ANONYMOUS_ENABLED={{ grafana_allow_anon_access | lower }} \
     -e GF_SERVER_ROOT_URL="https://{{ grafana_domain_name }}/" \
-    docker.io/grafana/grafana-oss:{{ grafana_version }}
+{% if grafana_smtp_host is defined %}    -e GF_SMTP_ENABLED="true" \
+    -e GF_SMTP_HOST="{{ grafana_smtp_host }}" \
+    -e GF_SMTP_USER="{{ grafana_smtp_user }}" \
+    -e GF_SMTP_PASSWORD="{{ grafana_smtp_password }}" \
+    -e GF_SMTP_FROM_ADDRESS="grafana@leonard.io" \
+    -e GF_EMAILS_WELCOME_EMAIL_ON_SIGN_UP="true" \
+{% endif %}    docker.io/grafana/grafana-oss:{{ grafana_version }}
 
 ExecStop=-podman stop grafana
 ExecStop=-podman rm grafana

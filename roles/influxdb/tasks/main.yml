@@ -16,7 +16,7 @@
 
 - name: Create a user on localhost using default login credentials
   community.general.influxdb_user:
-    admin: yes
+    admin: true
     user_name: "{{ influxdb_username }}"
     user_password: "{{ influxdb_password }}"
     grants:
