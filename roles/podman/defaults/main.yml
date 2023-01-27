@@ -2,3 +2,4 @@
 podman_prune_users:
   - root
 podman_prune_max_age: 604800
+podman_auth_file: /etc/containers/auth.json

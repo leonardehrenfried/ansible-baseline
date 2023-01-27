@@ -9,7 +9,7 @@ namespace: leonardehrenfried
 name: baseline
 
 # The version of the collection. Must be compatible with semantic versioning
-version: 0.1.38
+version: 0.1.40
 
 # The path to the Markdown (.md) readme file. This path is relative to the root of the collection
 readme: README.md
@@ -42,7 +42,8 @@ tags: []
 # collection label 'namespace.name'. The value is a version range
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
-dependencies: {}
+dependencies:
+  containers.podman: 1.10.1
 
 # The URL of the originating SCM repository
 repository: https://github.com/leonardehrenfried/ansible-baseline

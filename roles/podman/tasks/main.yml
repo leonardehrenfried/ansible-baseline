@@ -21,3 +21,19 @@
     state: started
     enabled: true
     daemon_reload: true
+
+- name: Login to dockerhub registry and create /etc/containers/auth.json
+  containers.podman.podman_login:
+    username: "{{ item.username }}"
+    password: '{{ item.password }}'
+    registry: "{{ item.registry }}"
+    authfile: "{{ podman_auth_file }}"
+  with_items: "{{ podman_authorized_repos }}"
+  when: podman_authorized_repos is defined
+
+- name: Change permissions of auth file
+  ansible.builtin.file:
+    path:  "{{ podman_auth_file }}"
+    state: file
+    mode: '0755'
+  when: podman_authorized_repos is defined
