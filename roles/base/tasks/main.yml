@@ -17,6 +17,7 @@
       - zsh
       - unzip
       - tar
+      - sudo
     state: present
 
 - name: Install global aliases
