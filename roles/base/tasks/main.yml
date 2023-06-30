@@ -23,8 +23,8 @@
 - name: Install global aliases
   template: src=alias.sh dest=/etc/profile.d/
 
-- hostname:
-    name: "{{ server_name }}"
+- hostname: Set hostname
+  name: "{{ server_name }}"
 
 - name: Add hostname to /etc/hosts
   lineinfile:
