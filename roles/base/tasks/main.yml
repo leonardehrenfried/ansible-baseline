@@ -67,3 +67,10 @@
     state: present
     key: "{{ lookup('file', item.keys_file) }}"
   with_items: "{{ users }}"
+
+- name: Remove users
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: absent
+    remove: yes
+  with: "{{ removed_users }}"
