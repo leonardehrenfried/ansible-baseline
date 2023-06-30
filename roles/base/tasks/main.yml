@@ -52,9 +52,11 @@
     shell: /bin/bash
   with_items: "{{ users }}"
 
-- name: Set authorized keys taken from url
+- name: Set authorized keys from url
+  when: item.keys_url is defined
   ansible.posix.authorized_key:
     user: "{{ item.name }}"
     state: present
     key: "{{ item.keys_url }}"
   with_items: "{{ users }}"
+
