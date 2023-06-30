@@ -23,13 +23,9 @@
 - name: Install global aliases
   template: src=alias.sh dest=/etc/profile.d/
 
-- hostname: Set hostname
-  name: "{{ server_name }}"
-
-- name: Add hostname to /etc/hosts
-  lineinfile:
-    path: /etc/hosts
-    line: "127.0.0.1 {{ server_name }}"
+- name: Set a hostname
+  ansible.builtin.hostname:
+    name: "{{ server_name }}"
 
 - name: Set timezone
   timezone:
@@ -52,6 +48,13 @@
     shell: /bin/bash
   with_items: "{{ users }}"
 
+- name: Remove users
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: absent
+    remove: yes
+  with_items: "{{ removed_users }}"
+
 - name: Set authorized keys from url
   when: item.keys_url is defined
   ansible.posix.authorized_key:
@@ -68,9 +71,3 @@
     key: "{{ lookup('file', item.keys_file) }}"
   with_items: "{{ users }}"
 
-- name: Remove users
-  ansible.builtin.user:
-    name: "{{ item }}"
-    state: absent
-    remove: yes
-  with: "{{ removed_users }}"
