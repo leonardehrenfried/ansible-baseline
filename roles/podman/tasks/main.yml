@@ -30,10 +30,11 @@
     authfile: "{{ podman_auth_file }}"
   with_items: "{{ podman_authorized_repos }}"
   when: podman_authorized_repos is defined
+  no_log: true
 
 - name: Change permissions of auth file
   ansible.builtin.file:
-    path:  "{{ podman_auth_file }}"
+    path: "{{ podman_auth_file }}"
     state: file
     mode: '0755'
   when: podman_authorized_repos is defined
