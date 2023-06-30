@@ -60,3 +60,10 @@
     key: "{{ item.keys_url }}"
   with_items: "{{ users }}"
 
+- name: Set authorized keys from local file
+  when: item.keys_file is defined
+  ansible.posix.authorized_key:
+    user: "{{ item.name }}"
+    state: present
+    key: "{{ lookup('file', item.keys_file) }}"
+  with_items: "{{ users }}"
