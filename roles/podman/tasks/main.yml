@@ -1,11 +1,17 @@
 ---
-- name: Install packages
-  apt:
+- name: Install Debian-specific packages
+  when: ansible_distribution == 'Debian'
+  ansible.builtin.package:
     state: latest
     name:
       - dbus-user-session
-      - crun
       - uidmap
+
+- name: Install packages
+  ansible.builtin.package:
+    state: latest
+    name:
+      - crun
       - slirp4netns
       - podman
 

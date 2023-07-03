@@ -1,0 +1,21 @@
+---
+- name: Only run "apt update" if the last one is more than a week ago
+  when: ansible_distribution == 'Debian'
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 604800
+
+- name: Install base packages
+  ansible.builtin.package:
+    name:
+      - curl
+    state: present
+
+- name: Copy send-to-matrix script
+  template:
+    src: "{{ item }}"
+    dest: /usr/local/bin
+    mode: 711
+  with_items:
+    - send-to-matrix
+    - systemd-failure-notification

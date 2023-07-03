@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Adjust homeserver, room, and accesstoken to your particular setup
+# Example:
+# send-to-matrix "some text"
+
+msgtype=m.text
+homeserver=matrix.org
+room=!pdeJZYwcerTHonJTtn:matrix.org
+accesstoken={{ matrix_bot_token }}
+
+if [ -n "$accesstoken" ]; then
+   echo "Sending Matrix message '$1'"
+
+   payload=`jq -nc --arg msg "$1" '{msgtype:"m.text", body:$msg}'`
+   curl --silent --output /dev/null -XPOST -d "$payload" "https://$homeserver/_matrix/client/r0/rooms/$room/send/m.room.message?access_token=$accesstoken"
+fi
+

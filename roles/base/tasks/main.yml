@@ -1,8 +1,23 @@
 ---
 - name: Only run "apt update" if the last one is more than a week ago
+  when: ansible_distribution == 'Debian'
   ansible.builtin.apt:
-    update_cache: true
+    update_cache: True
     cache_valid_time: 604800
+
+- name: Install Centos-specific packages
+  when: ansible_distribution == 'CentOS'
+  package:
+    name:
+      - epel-release
+    state: present
+
+- name: Install Debian-specific packages
+  when: ansible_distribution == 'Debian'
+  package:
+    name:
+      - cron-apt
+    state: present
 
 - name: Install base packages
   package:
@@ -10,15 +25,16 @@
       - htop
       - tree
       - neovim
-      - cron-apt
-      - ripgrep
       - autojump
+      - ripgrep
       - jq
-      - zsh
       - unzip
       - tar
       - sudo
+      - bash-completion
     state: present
+    update_cache: True
+
 
 - name: Install global aliases
   template: src=alias.sh dest=/etc/profile.d/
@@ -33,14 +49,14 @@
 
 - name: Configure passwordless sudo
   ansible.builtin.copy:
-    content: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    content: '%wheel ALL=(ALL) NOPASSWD: ALL'
     dest: /etc/sudoers.d/passwordless
 
 - name: Create user and add to groups
   user:
     name: "{{ item.name }}"
     groups:
-      - sudo
+      - wheel
       - systemd-journal
     append: true
     state: present
