@@ -1,0 +1,9 @@
+[Unit]
+Description=Restart otp every night
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl restart otp.service
+
+[Install]
+WantedBy=multi-user.target

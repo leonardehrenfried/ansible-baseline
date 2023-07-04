@@ -1,0 +1,78 @@
+---
+- name: Create user otp
+  user:
+    name: otp
+    create_home: True
+    shell: /bin/bash
+    state: present
+
+- name: Create folder for graph build
+  ansible.builtin.file:
+    path: "{{ otp_base_dir }}"
+    state: directory
+    owner: otp
+    group: otp
+
+- name: Copy build-graph script
+  template:
+    src: build-graph
+    dest: "{{ otp_base_dir }}/"
+    mode: a+x
+    owner: otp
+    group: otp
+  notify: Start graph build
+
+- name: Copy OTP config
+  template:
+    src: otp/{{ item }}
+    dest: "{{ otp_base_dir }}/build/"
+    owner: otp
+    group: otp
+  with_items:
+    - otp-config.json
+    - router-config.json
+    - build-config.json
+  notify: Start graph build
+
+- name: Ensure build-config.json is not in latest folder
+  ansible.builtin.file:
+    path: "{{ otp_base_dir }}/latest/build-config.json"
+    state: absent
+
+- name: Copy OTP quadlet container config
+  template:
+    src: systemd/{{ item }}
+    dest: /etc/containers/systemd/
+    owner: root
+    group: root
+  with_items:
+    - otp.container
+  notify: Reload OTP service
+
+- name: Install systemd files
+  ansible.builtin.template: src=systemd/{{ item }} dest=/etc/systemd/system/
+  with_items:
+    - graph-build.service
+    - graph-build.timer
+    - otp-restart.service
+    - otp-restart.timer
+
+- name: Start timers
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  with_items:
+    - otp-restart.timer
+    - graph-build.timer
+    #- otp.service
+
+- name: Caddyfile
+  ansible.builtin.template:
+    src: templates/otp.caddy
+    dest: /etc/caddy/
+    owner: caddy
+    group: caddy
+    mode: 0660
+  notify: Restart caddy

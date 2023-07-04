@@ -1,0 +1,21 @@
+[Unit]
+Description=Run OTP
+
+# Restart once within 20 minutes so that an intermittent network failures are gracefully handled
+StartLimitIntervalSec=1200
+StartLimitBurst=2
+
+[Container]
+Environment=JAVA_TOOL_OPTIONS=-Xmx3G
+Image={{ otp_image }}
+Volume={{ otp_base_dir }}/latest/:/var/opentripplanner:z
+PublishPort={{ otp_port }}:8080
+Exec=--load --serve
+
+[Service]
+ExecStartPre=-send-to-matrix "🚆 Starting %n on {{ inventory_hostname }}"
+Restart=on-failure
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target

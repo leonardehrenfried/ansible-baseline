@@ -33,8 +33,6 @@
       - sudo
       - bash-completion
     state: present
-    update_cache: True
-
 
 - name: Install global aliases
   template: src=alias.sh dest=/etc/profile.d/

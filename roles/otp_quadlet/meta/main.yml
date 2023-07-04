@@ -1,0 +1,8 @@
+---
+collections:
+
+dependencies:
+  - role: base
+  - role: leonardehrenfried.baseline.send_to_matrix
+  - role: leonardehrenfried.baseline.podman
+  - role: leonardehrenfried.baseline.caddyfile

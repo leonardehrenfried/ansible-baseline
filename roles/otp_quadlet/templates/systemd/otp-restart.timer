@@ -1,0 +1,9 @@
+[Unit]
+Description=Restart otp every night
+
+[Timer]
+OnCalendar=*-*-* {{ otp_restart_time }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target

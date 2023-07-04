@@ -1,0 +1,75 @@
+#! /bin/bash -e
+
+PBF_FILE="opentripplanner.osm.pbf"
+
+# freely available elevation data in geotiff format (https://srtm.csi.cgiar.org/)
+ELEVATION_BASE_URL="https://srtm.csi.cgiar.org/wp-content/uploads/files/srtm_5x5/TIFF/"
+#ELEVATION_FILES=("srtm_38_01" "srtm_38_03" "srtm_39_03" "srtm_38_02" "srtm_39_01" "srtm_39_02")
+# setting elevation files to an empty list, computing it would take more memory
+ELEVATION_FILES=()
+
+IMAGE_NAME="{{ otp_image }}"
+CONTAINER_NAME="graph-build"
+
+CURL_OPTS="--location --fail -s --show-error -#"
+
+# where input and intermediate files are
+BUILD_DIR=build
+# where the final build output is. this is read by OTP
+OUTPUT_DIR=latest
+
+podman stop $CONTAINER_NAME || true
+podman rm $CONTAINER_NAME || true
+
+mkdir -p build
+cd build
+
+# download extract elevation zip files. this only needs to run once.
+for i in "${ELEVATION_FILES[@]}"
+do
+  :
+  zipfile="${i}.zip"
+  tiffile="${i}.tif"
+  if [ -f "$tiffile" ]; then
+    echo "$zipfile exists."
+  else
+    echo "$tiffile does not exist. Downloading ..."
+    curl --fail --location -s "${ELEVATION_BASE_URL}{$zipfile}" -o ${zipfile}
+    unzip ${zipfile} ${tiffile}
+    rm ${zipfile}
+  fi
+done
+
+#if [ -f "$PBF_FILE" ]; then
+#  echo "$PBF_FILE exists. Downloading updates."
+#  #pyosmium-up-to-date -v $PBF_FILE
+#else
+#  echo "$PBF_FILE does not exist."
+#  curl ${CURL_OPTS} "${PBF_DOWNLOAD_URL}" -o ${PBF_FILE}
+#fi
+
+# delete GTFS files from previous graph build
+echo "Deleting existing GTFS data from previous build"
+rm -rf *.gtfs.zip
+
+mkdir -p report
+
+# actually build the OTP graph
+podman pull ${IMAGE_NAME}
+podman run \
+  -v {{ otp_base_dir }}/${BUILD_DIR}:/var/opentripplanner/:z \
+  --name ${CONTAINER_NAME} \
+  --rm \
+  --cpu-shares 512 \
+  -e JAVA_TOOL_OPTIONS="-Xmx6G" \
+  ${IMAGE_NAME} --build --save
+
+# move the graph and its config from /build to /latest
+cd ..
+mkdir -p ${OUTPUT_DIR}
+cp ${BUILD_DIR}/graph.obj  ${OUTPUT_DIR}/
+cp ${BUILD_DIR}/router-config.json ${BUILD_DIR}/otp-config.json ${OUTPUT_DIR}
+
+send-to-matrix "📦️ OTP graph build complete on {{ inventory_hostname }}"
+
+

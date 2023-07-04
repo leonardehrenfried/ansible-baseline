@@ -1,0 +1,21 @@
+[Unit]
+Description=Build OTP graph
+
+# Restart once within 20 minutes so that intermittent network failures are gracefully handled
+StartLimitIntervalSec=1200
+StartLimitBurst=2
+
+[Service]
+User=otp
+WorkingDirectory={{ otp_base_dir }}
+ExecStart={{ otp_base_dir }}/build-graph
+
+# force stop after 6 hours
+RuntimeMaxSec=21600
+
+ExecStopPost=systemd-failure-notification "Graph build"
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
