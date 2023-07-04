@@ -34,8 +34,13 @@
       - bash-completion
     state: present
 
-- name: Install global aliases
-  template: src=alias.sh dest=/etc/profile.d/
+- name: Install global shell config
+  template:
+    src: "{{ item }}"
+    dest: /etc/profile.d/
+  with_items:
+    - alias.sh
+    - prompt.sh
 
 - name: Set a hostname
   ansible.builtin.hostname:
