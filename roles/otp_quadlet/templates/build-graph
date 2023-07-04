@@ -34,7 +34,7 @@ do
     echo "$zipfile exists."
   else
     echo "$tiffile does not exist. Downloading ..."
-    curl --fail --location -s "${ELEVATION_BASE_URL}{$zipfile}" -o ${zipfile}
+    curl ${CURL_OPTS} "${ELEVATION_BASE_URL}{$zipfile}" -o ${zipfile}
     unzip ${zipfile} ${tiffile}
     rm ${zipfile}
   fi
@@ -51,6 +51,10 @@ done
 # delete GTFS files from previous graph build
 echo "Deleting existing GTFS data from previous build"
 rm -rf *.gtfs.zip
+
+{% for item in manual_download_gtfs_feeds %}
+curl ${CURL_OPTS} "{{ item.url }}" -o "{{ item.feed_id}}.gtfs.zip"
+{% endfor %}
 
 mkdir -p report
 
