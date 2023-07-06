@@ -2,3 +2,5 @@
 timezone: Europe/Berlin
 
 removed_users: []
+
+sudo_group: "{{ 'sudo' if ansible_distribution == 'Debian' else 'wheel' }}"

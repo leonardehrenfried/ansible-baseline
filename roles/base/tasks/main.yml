@@ -52,14 +52,14 @@
 
 - name: Configure passwordless sudo
   ansible.builtin.copy:
-    content: '%wheel ALL=(ALL) NOPASSWD: ALL'
+    content: '%{{ sudo_group }} ALL=(ALL) NOPASSWD: ALL'
     dest: /etc/sudoers.d/passwordless
 
 - name: Create user and add to groups
   user:
     name: "{{ item.name }}"
     groups:
-      - wheel
+      - "{{ sudo_group }}"
       - systemd-journal
     append: true
     state: present
