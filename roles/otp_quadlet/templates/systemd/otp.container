@@ -6,7 +6,7 @@ StartLimitIntervalSec=1200
 StartLimitBurst=2
 
 [Container]
-Environment=JAVA_TOOL_OPTIONS=-Xmx3G
+Environment=JAVA_TOOL_OPTIONS={{ otp_jvm_opts }}
 Image={{ otp_image }}
 Volume={{ otp_base_dir }}/latest/:/var/opentripplanner:z
 PublishPort={{ otp_port }}:8080
