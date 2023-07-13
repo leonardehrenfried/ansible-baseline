@@ -1,4 +1,14 @@
 ---
+- name: Install base packages
+  package:
+    name:
+      - python-pip
+    state: present
+
+- name: Install pyosmium
+  ansible.builtin.pip:
+    name: osmium
+
 - name: Create user otp
   user:
     name: otp
