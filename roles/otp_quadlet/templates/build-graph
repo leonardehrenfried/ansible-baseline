@@ -73,6 +73,7 @@ podman run \
   --rm \
   --log-driver=journald \
   --cpu-shares 512 \
+  --cgroups=split \
   -e JAVA_TOOL_OPTIONS="{{ otp_graph_build_jvm_opts }}" \
   ${IMAGE_NAME} --build --save
 

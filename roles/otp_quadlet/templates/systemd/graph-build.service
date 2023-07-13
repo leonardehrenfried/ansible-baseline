@@ -7,6 +7,7 @@ StartLimitBurst=2
 
 [Service]
 User=otp
+Delegate=yes
 WorkingDirectory={{ otp_base_dir }}
 ExecStart={{ otp_base_dir }}/build-graph
 
