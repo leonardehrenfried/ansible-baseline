@@ -40,13 +40,20 @@ do
   fi
 done
 
-#if [ -f "$PBF_FILE" ]; then
-#  echo "$PBF_FILE exists. Downloading updates."
-#  #pyosmium-up-to-date -v $PBF_FILE
-#else
-#  echo "$PBF_FILE does not exist."
-#  curl ${CURL_OPTS} "${PBF_DOWNLOAD_URL}" -o ${PBF_FILE}
-#fi
+{% for item in manual_osm_downloads %}
+
+PBF_FILE="{{ item.local_name }}"
+PBF_DOWNLOAD_URL="{{ item.url }}"
+
+if [ -f "$PBF_FILE" ]; then
+  echo "$PBF_FILE exists. Downloading updates."
+  pyosmium-up-to-date -v $PBF_FILE
+else
+  echo "$PBF_FILE does not exist."
+  curl ${CURL_OPTS} "${PBF_DOWNLOAD_URL}" -o ${PBF_FILE}
+fi
+
+{% endfor %}
 
 # delete GTFS files from previous graph build
 echo "Deleting existing GTFS data from previous build"
