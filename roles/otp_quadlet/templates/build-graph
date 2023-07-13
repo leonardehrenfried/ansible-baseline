@@ -65,7 +65,7 @@ podman run \
   --name ${CONTAINER_NAME} \
   --rm \
   --cpu-shares 512 \
-  -e JAVA_TOOL_OPTIONS="-Xmx6G" \
+  -e JAVA_TOOL_OPTIONS="{{ otp_graph_build_jvm_opts }}" \
   ${IMAGE_NAME} --build --save
 
 # move the graph and its config from /build to /latest

@@ -6,7 +6,7 @@
 
 msgtype=m.text
 homeserver=matrix.org
-room=!pdeJZYwcerTHonJTtn:matrix.org
+room={{ matrix_room_address }}
 accesstoken={{ matrix_bot_token }}
 
 if [ -n "$accesstoken" ]; then

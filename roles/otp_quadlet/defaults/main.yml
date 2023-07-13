@@ -4,3 +4,5 @@ otp_base_dir: "/var/otp"
 otp_restart_time: "3:00"
 otp_restart_after_graph_build: false
 manual_download_gtfs_feeds: []
+
+otp_graph_build_jvm_opts: "-Xmx6G"
