@@ -42,6 +42,11 @@
     - alias.sh
     - prompt.sh
 
+- name: Remove custom colorls
+  ansible.builtin.file:
+    path: /etc/profile.d/colorls.sh
+    state: absent
+
 - name: Set a hostname
   ansible.builtin.hostname:
     name: "{{ server_name }}"
