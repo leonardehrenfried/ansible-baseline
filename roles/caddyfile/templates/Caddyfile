@@ -1,1 +1,7 @@
+{
+  log {
+    output stdout
+    format console
+  }
+}
 import *.caddy

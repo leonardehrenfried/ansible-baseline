@@ -1,4 +1,9 @@
 ---
+- name: Validate Caddy conf
+  command: "caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile"
+  become: true
+  listen: "Restart caddy"
+
 - name: Restart caddy
   ansible.builtin.systemd:
     name: caddy
