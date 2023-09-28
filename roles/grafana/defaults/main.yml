@@ -1,4 +1,4 @@
 ---
 grafana_port: 3000
 grafana_allow_anon_access: false
-grafana_version: "10.1.1"
+grafana_version: "10.1.2"
