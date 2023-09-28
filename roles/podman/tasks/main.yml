@@ -1,6 +1,6 @@
 ---
-- name: Install Debian-specific packages
-  when: ansible_distribution == 'Debian'
+- name: Install Debian/Ubuntu-specific packages
+  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   ansible.builtin.package:
     state: latest
     name:
