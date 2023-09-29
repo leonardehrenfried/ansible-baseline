@@ -17,7 +17,8 @@ ExecStart=podman run \
     -v grafana-storage:/var/lib/grafana \
     -v /etc/grafana/provisioning/:/etc/grafana/provisioning/ \
     -e GF_AUTH_ANONYMOUS_ENABLED={{ grafana_allow_anon_access | lower }} \
-{% if grafana_domain_name is defined %}    -e GF_SERVER_ROOT_URL="https://{{ grafana_domain_name }}/" \
+{% if grafana_domain is defined %}    -e GF_SERVER_DOMAIN="{{ grafana_domain }}/" \
+{% endif %}{% if grafana_root_url is defined %}    -e GF_SERVER_ROOT_URL="https://{{ grafana_root_url }}/" \
 {% endif %}{% if grafana_serve_from_sub_path is defined and grafana_serve_from_sub_path %}    -e GF_SERVER_SERVE_FROM_SUB_PATH="true" \
 {% endif %}    -e GF_DATE_FORMATS_INTERVAL_DAY="DD-MM-YY" \
 {% if grafana_smtp_host is defined %}    -e GF_SMTP_ENABLED="true" \
