@@ -49,7 +49,7 @@ if [ -f "$PBF_FILE" ]; then
   echo "$PBF_FILE exists. Downloading updates."
   pyosmium-up-to-date -v $PBF_FILE
 else
-  echo "$PBF_FILE does not exist."
+  echo "$PBF_FILE does not exist. Downloading ..."
   curl ${CURL_OPTS} "${PBF_DOWNLOAD_URL}" -o ${PBF_FILE}
 fi
 
@@ -72,8 +72,6 @@ podman run \
   --name ${CONTAINER_NAME} \
   --rm \
   --log-driver=journald \
-  --cpu-shares 512 \
-  --cgroups=split \
   -e JAVA_TOOL_OPTIONS="{{ otp_graph_build_jvm_opts }}" \
   ${IMAGE_NAME} --build --save
 
