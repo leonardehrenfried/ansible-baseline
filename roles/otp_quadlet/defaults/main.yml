@@ -9,5 +9,5 @@ manual_osm_downloads: []
 otp_jvm_opts: "-Xmx6G"
 otp_graph_build_jvm_opts: "-Xmx6G"
 
-## When the graph build starts
+## when does the graph build run, systemd calendar syntax
 graph_build_calendar: "*-*-* 01:00:00"
