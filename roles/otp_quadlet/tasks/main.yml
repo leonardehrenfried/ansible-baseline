@@ -2,12 +2,24 @@
 - name: Install base packages
   package:
     name:
-      - python-pip
+      - python3-pip
+      - cmake
+      - gcc
+      - gcc-c++
+      - make
+      - zlib-devel
+      - expat-devel
+      - bzip2-devel
+      - boost-devel
+      - python3-devel
     state: present
 
 - name: Install pyosmium
   ansible.builtin.pip:
-    name: osmium
+    name: "{{ item }}"
+  with_items:
+    - packaging
+    - osmium
 
 - name: Create user otp
   user:

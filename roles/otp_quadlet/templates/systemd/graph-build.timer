@@ -2,7 +2,7 @@
 Description=Build OTP graph every night
 
 [Timer]
-OnCalendar=*-*-* 01:00:00
+OnCalendar={{ graph_build_calendar }}
 Persistent=true
 
 [Install]
