@@ -1,3 +1,10 @@
 {{ otp_domain_name }} {
   reverse_proxy /* localhost:{{ otp_port }}
+
+{% if otp_prometheus_user is defined %}
+  basicauth /otp/actuators/prometheus {
+    {{ otp_prometheus_user }} {{ otp_prometheus_password | password_hash('bcrypt') }}
+  }
+{% endif %}
+
 }

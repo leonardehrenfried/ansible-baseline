@@ -72,7 +72,9 @@
   notify: Reload OTP service
 
 - name: Install systemd files
-  ansible.builtin.template: src=systemd/{{ item }} dest=/etc/systemd/system/
+  ansible.builtin.template:
+    src: systemd/{{ item }}
+    dest: /etc/systemd/system/
   with_items:
     - graph-build.service
     - graph-build.timer

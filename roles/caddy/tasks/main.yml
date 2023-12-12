@@ -16,7 +16,9 @@
 
 - name: Install caddy
   ansible.builtin.package:
-    name: caddy
+    name:
+      - caddy
+      - python3-passlib
 
 - name: Start systemd service
   systemd:
