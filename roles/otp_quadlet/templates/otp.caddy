@@ -3,7 +3,7 @@
 
 {% if otp_prometheus_user is defined %}
   basicauth /otp/actuators/prometheus {
-    {{ otp_prometheus_user }} {{ otp_prometheus_password | password_hash('bcrypt') }}
+    {{ otp_prometheus_user }} {{ otp_prometheus_password | password_hash('bcrypt', salt='ZZjxxx7R7p7z65GHj4ih8J' ) }}
   }
 {% endif %}
 
