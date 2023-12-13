@@ -7,6 +7,7 @@ StartLimitBurst=2
 
 [Container]
 Environment=JAVA_TOOL_OPTIONS="{{ otp_jvm_opts }}"
+Environment=TZ="{{ timezone }}"
 Image={{ otp_image }}
 Volume={{ otp_base_dir }}/latest/:/var/opentripplanner:z
 PublishPort={{ otp_port }}:8080
