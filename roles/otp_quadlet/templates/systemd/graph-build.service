@@ -14,7 +14,7 @@ ExecStart={{ otp_base_dir }}/build-graph
 # force stop after 6 hours
 RuntimeMaxSec=21600
 
-ExecStopPost=systemd-failure-notification "Graph build"
+ExecStopPost=systemd-failure-notification "%n"
 
 Restart=on-failure
 
