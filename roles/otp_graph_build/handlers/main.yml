@@ -1,0 +1,6 @@
+---
+- name: Start graph build
+  ansible.builtin.systemd:
+    state: restarted
+    name: graph-build
+    daemon_reload: true

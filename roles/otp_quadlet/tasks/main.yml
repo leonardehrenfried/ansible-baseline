@@ -1,49 +1,4 @@
 ---
-- name: Install base packages
-  package:
-    name:
-      - python3-pip
-      - cmake
-      - gcc
-      - gcc-c++
-      - make
-      - zlib-devel
-      - expat-devel
-      - bzip2-devel
-      - boost-devel
-      - python3-devel
-    state: present
-
-- name: Install pyosmium
-  ansible.builtin.pip:
-    name: "{{ item }}"
-  with_items:
-    - packaging
-    - osmium
-
-- name: Create user otp
-  user:
-    name: otp
-    create_home: True
-    shell: /bin/bash
-    state: present
-
-- name: Create folder for graph build
-  ansible.builtin.file:
-    path: "{{ otp_base_dir }}"
-    state: directory
-    owner: otp
-    group: otp
-
-- name: Copy build-graph script
-  template:
-    src: build-graph
-    dest: "{{ otp_base_dir }}/"
-    mode: a+x
-    owner: otp
-    group: otp
-  notify: Start graph build
-
 - name: Copy OTP config
   template:
     src: otp/{{ item }}
@@ -76,8 +31,6 @@
     src: systemd/{{ item }}
     dest: /etc/systemd/system/
   with_items:
-    - graph-build.service
-    - graph-build.timer
     - otp-restart.service
     - otp-restart.timer
 
@@ -89,7 +42,6 @@
     daemon_reload: yes
   with_items:
     - otp-restart.timer
-    - graph-build.timer
     - otp.service
 
 - name: Caddyfile
