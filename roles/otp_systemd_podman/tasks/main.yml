@@ -16,6 +16,13 @@
     path: "{{ otp_base_dir }}/latest/build-config.json"
     state: absent
 
+- name: Install systemd files
+  ansible.builtin.template:
+    src: systemd/{{ item }}
+    dest: /etc/systemd/system/
+  with_items:
+    - otp.service
+
 - name: Start service
   systemd:
     name: "{{ item }}"
