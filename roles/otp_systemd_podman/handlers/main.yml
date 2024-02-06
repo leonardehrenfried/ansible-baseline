@@ -1,0 +1,4 @@
+---
+- name: Reload OTP service
+  ansible.builtin.systemd:
+    daemon_reload: true

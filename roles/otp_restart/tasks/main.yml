@@ -1,0 +1,18 @@
+---
+- name: Install systemd files
+  ansible.builtin.template:
+    src: systemd/{{ item }}
+    dest: /etc/systemd/system/
+  with_items:
+    - otp-restart.service
+    - otp-restart.timer
+
+- name: Start timers
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  with_items:
+    - otp-restart.timer
+    - otp.service

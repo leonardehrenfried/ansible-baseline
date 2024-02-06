@@ -21,7 +21,7 @@ OUTPUT_DIR=latest
 podman stop $CONTAINER_NAME || true
 podman rm $CONTAINER_NAME || true
 
-mkdir -p build
+mkdir -p -m 775 build
 cd build
 
 # download extract elevation zip files. this only needs to run once.
@@ -59,6 +59,10 @@ fi
 echo "Deleting existing GTFS data from previous build"
 rm -rf *.gtfs.zip
 
+{% if graph_build_extra_instructions is defined %}
+{{ graph_build_extra_instructions }}
+{% endif %}
+
 {% for item in manual_download_gtfs_feeds %}
 curl ${CURL_OPTS} "{{ item.url }}" -o "{{ item.feed_id}}.gtfs.zip"
 {% endfor %}
@@ -71,6 +75,7 @@ podman run \
   -v {{ otp_base_dir }}/${BUILD_DIR}:/var/opentripplanner/:z \
   --name ${CONTAINER_NAME} \
   --rm \
+  --log-driver=journald
   -e JAVA_TOOL_OPTIONS="{{ otp_graph_build_jvm_opts }}" \
   ${IMAGE_NAME} --build --save
 

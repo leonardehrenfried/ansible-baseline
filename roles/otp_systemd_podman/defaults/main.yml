@@ -1,0 +1,5 @@
+---
+otp_port: 8080
+otp_base_dir: "/var/otp"
+
+otp_jvm_opts: "-Xmx6G"

@@ -16,17 +16,7 @@
     path: "{{ otp_base_dir }}/latest/build-config.json"
     state: absent
 
-- name: Copy OTP quadlet container config
-  template:
-    src: systemd/{{ item }}
-    dest: /etc/containers/systemd/
-    owner: root
-    group: root
-  with_items:
-    - otp.container
-  notify: Reload OTP service
-
-- name: Start timers
+- name: Start service
   systemd:
     name: "{{ item }}"
     state: started
