@@ -7,12 +7,18 @@
 
 - name: Caddy repository is enabled
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  register: caddyrepo
   ansible.builtin.get_url:
     url: https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt
     dest: /etc/apt/sources.list.d/caddy-stable.list
     owner: root
     group: root
     mode: "644"
+
+- name: Run "apt update" if the caddy repo was added
+  when: caddyrepo.changed
+  ansible.builtin.apt:
+    update_cache: True
 
 - name: Install caddy
   ansible.builtin.package:
