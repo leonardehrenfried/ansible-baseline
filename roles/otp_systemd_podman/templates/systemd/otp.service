@@ -10,12 +10,14 @@ ExecStartPre=-send-to-matrix "🚆 Starting %n on {{ inventory_hostname }}"
 ExecStart=podman run \
     --rm -it \
     -p {{ otp_port }}:8080 \
-    --name=otp \
+    --name=%n \
     --log-driver=journald \
     -v {{ otp_base_dir }}/latest/:/var/opentripplanner:z \
     -e JAVA_TOOL_OPTIONS="{{ otp_jvm_opts }}" \
     -e TZ="{{ timezone }}" \
     {{ otp_image }} --load --serve
+ExecStop=-podman stop %n
+ExecStop=-podman rm %n
 Restart=on-failure
 
 [Install]
