@@ -15,4 +15,3 @@
     daemon_reload: yes
   with_items:
     - otp-restart.timer
-    - otp.service
