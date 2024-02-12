@@ -1,0 +1,5 @@
+---
+- name: Restart digitransit
+  systemd:
+    state: restarted
+    name: digitransit

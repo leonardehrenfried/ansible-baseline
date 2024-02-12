@@ -1,0 +1,7 @@
+---
+collections:
+
+dependencies:
+  - role: leonardehrenfried.baseline.base
+  - role: leonardehrenfried.baseline.journald
+  - role: leonardehrenfried.baseline.podman

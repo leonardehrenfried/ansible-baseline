@@ -1,0 +1,32 @@
+[Unit]
+Description=Run Digitransit
+
+# Restart once within 20 minutes so that an intermittent network failures are gracefully handled
+StartLimitIntervalSec=1200
+StartLimitBurst=2
+
+[Service]
+ExecStartPre=-podman stop --ignore %N
+ExecStartPre=-podman rm %N
+
+ExecStartPre=-podman pull {{ digitransit_image }}
+
+ExecStartPre=-send-to-matrix "📱 Starting %n on {{ inventory_hostname }}"
+
+ExecStart=podman run -i --rm --name %N \
+ -p {{ digitransit_port}}:8080 \
+ -e NODE_ENV=production \
+ -e CONFIG={{ digitransit_config }} \
+ -e ROOTLINK=https://{{ inventory_hostname }} \
+ -e GEOCODING_BASE_URL=https://{{ digitransit_otp_domain }}/geocoder \
+ -e OTP_URL="https://{{ digitransit_otp_domain }}/otp/routers/default/" \
+ -e API_URL="https://{{ digitransit_otp_domain }}" \
+ {{ digitransit_image }}
+
+ExecStop=podman stop --ignore %N
+ExecStop=-podman rm %N
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
