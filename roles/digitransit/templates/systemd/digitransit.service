@@ -17,7 +17,7 @@ ExecStart=podman run -i --rm --name %N \
  -p {{ digitransit_port}}:8080 \
  -e NODE_ENV=production \
  -e CONFIG={{ digitransit_config }} \
- -e ROOTLINK=https://{{ inventory_hostname }} \
+ -e ROOTLINK=https://{{ digitransit_otp_domain }} \
  -e GEOCODING_BASE_URL={{ digitransit_geocoder_baseurl }} \
  -e OTP_URL="https://{{ digitransit_otp_domain }}/otp/routers/default/" \
  -e API_URL="https://{{ digitransit_otp_domain }}" \
