@@ -1,0 +1,56 @@
+{
+  "options": {
+    "paths": {
+      "root": "/usr/src/app/node_modules/tileserver-gl-styles",
+      "sprites": "/data/sprites",
+      "fonts": "/data/fonts",
+      "styles": "/data",
+      "mbtiles": "/data"
+    },
+    "serveAllFonts": true,
+    "tileMargin": 50
+  },
+  "styles": {
+    "streets": {
+      "style": "streets.json",
+      "serve_data": true,
+      "tilejson": {
+        "bounds": [
+          7.372216,
+          47.18741,
+          10.514946,
+          49.794564
+        ]
+      }
+    },
+    "satellite-overlay": {
+      "style": "satellite-overlay.json",
+      "serve_data": true,
+      "tilejson": {
+        "bounds": [
+          7.372216,
+          47.18741,
+          10.514946,
+          49.794564
+        ]
+      }
+    },
+    "bicycle": {
+      "style": "bicycle.json",
+      "serve_data": true,
+      "tilejson": {
+        "bounds": [
+          7.372216,
+          47.18741,
+          10.514946,
+          49.794564
+        ]
+      }
+    }
+  },
+  "data": {
+    "v3": {
+      "mbtiles": "input.mbtiles"
+    }
+  }
+}

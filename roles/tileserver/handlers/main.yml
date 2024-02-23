@@ -1,0 +1,10 @@
+---
+- name: Restart tileserver
+  service:
+    name: tileserver
+    state: restarted
+
+- name: Restart monit
+  service:
+    name: monit
+    state: restarted

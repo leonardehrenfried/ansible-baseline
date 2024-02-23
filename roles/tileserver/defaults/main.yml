@@ -1,0 +1,3 @@
+---
+tileserver_work_dir: "/var/tileserver/"
+tileserver_port: 5000

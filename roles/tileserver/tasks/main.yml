@@ -1,0 +1,63 @@
+---
+- name: Create working dir directory
+  file:
+    path: "{{ tileserver_work_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+
+- name: Download and unzip fonts
+  ansible.builtin.unarchive:
+    src: https://github.com/klokantech/klokantech-gl-fonts/archive/refs/tags/v1.0.0.zip
+    dest: "{{ tileserver_work_dir }}"
+    remote_src: yes
+    creates: "{{ tileserver_work_dir }}/klokantech-gl-fonts-1.0.0"
+
+- name: Copy sprites
+  ansible.builtin.copy:
+    src: sprites
+    dest: "{{ tileserver_work_dir }}"
+
+- name: Symlink fonts
+  ansible.builtin.file:
+    dest: "{{ tileserver_work_dir }}/fonts"
+    src: klokantech-gl-fonts-1.0.0
+    state: link
+
+- name: Install config and script files
+  template: src={{ item }} dest={{ tileserver_work_dir }}
+  with_items:
+    - streets.json
+    - satellite-overlay.json
+    - tileserver-config.json
+  notify: Restart tileserver
+
+- name: Install systemd files
+  template:
+    src: "systemd/{{ item }}"
+    dest: /etc/systemd/system/
+  with_items:
+    - tileserver.service
+    - tileserver-restart.service
+    - tileserver-restart.timer
+  notify: Restart tileserver
+
+- name: Start tileserver and restart every night
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  with_items:
+    - tileserver.service
+    - tileserver-restart.timer
+
+- name: Caddyfile
+  ansible.builtin.template:
+    src: templates/tileserver.caddy
+    dest: /etc/caddy/
+    owner: caddy
+    group: caddy
+    mode: 0660
+  notify: Restart caddy
