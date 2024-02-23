@@ -1,0 +1,16 @@
+[Unit]
+Description=Build mbtiles
+
+# Restart once times within 20 minutes so that an intermittent network failures are gracefully handled
+StartLimitIntervalSec=1200
+StartLimitBurst=1
+
+[Service]
+WorkingDirectory={{ tilemaker_work_dir }}
+ExecStart={{ tilemaker_work_dir }}/build-mbtiles
+Restart=on-failure
+
+ExecStopPost=systemd-failure-notification "tilemaker"
+
+[Install]
+WantedBy=multi-user.target

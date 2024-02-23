@@ -1,0 +1,44 @@
+---
+- name: Install packages
+  apt:
+    state: latest
+    name:
+      - pyosmium
+      - osmium-tool
+      - curl
+
+- name: Create data directory
+  file:
+    path: "{{ tilemaker_work_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+
+- name: Install config and script files
+  template: src={{ item }} dest="{{ tilemaker_work_dir }}"
+  with_items:
+    - build-mbtiles
+    - config-openmaptiles.json
+    - process-openmaptiles.lua
+    - germany-and-around.geojson
+  notify: Restart tilemaker
+
+- name: Make script executable
+  file:
+    dest: "{{ tilemaker_work_dir}}build-mbtiles"
+    mode: "a+x"
+
+- name: Install systemd files
+  template: src={{ item }} dest=/etc/systemd/system/
+  with_items:
+    - tilemaker.service
+    - tilemaker.timer
+
+- name: Start tilemaker.timer
+  systemd:
+    name: tilemaker.timer
+    state: started
+    enabled: yes
+    daemon_reload: yes
+

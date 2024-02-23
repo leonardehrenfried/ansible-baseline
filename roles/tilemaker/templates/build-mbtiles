@@ -1,0 +1,78 @@
+#! /bin/bash -e
+
+PBF_DOWNLOAD_URL=https://download.geofabrik.de/europe-latest.osm.pbf
+PBF_FILE=europe.osm.pbf
+PBF_EXTRACT_FILE=tilemaker-input.osm.pbf
+
+IMAGE_NAME="ghcr.io/leonardehrenfried/tilemaker:2024-02-23T12-42"
+CONTAINER_NAME="tilemaker"
+
+TILEMAKER_OUTPUT_FILE=tilemaker-output.inprocess.mbtiles
+TILEMAKER_FINAL_OUTPUT_FILE=tilemaker-output.mbtiles
+
+OCEAN_SHAPEFILE_URL=https://osmdata.openstreetmap.de/download/water-polygons-split-4326.zip
+OCEAN_SHAPEFILE_FOLDER=water-polygons-split-4326
+OCEAN_SHAPEFILE_ZIP=${OCEAN_SHAPEFILE_FOLDER}.zip
+OCEAN_SHAPEFILE_FINAL_FOLDER=coastline
+
+podman stop ${CONTAINER_NAME} || true
+
+if [ -f "$PBF_FILE" ]; then
+  echo "$PBF_FILE exists. Downloading updates."
+  pyosmium-up-to-date -v $PBF_FILE
+
+  echo "Checking referential integrity of ${PBF_FILE}"
+  # sometimes the update process results in a file with nodes missing from ways
+  if osmium check-refs ${PBF_FILE}; then
+    echo "OSM file has the correct referential integrity"
+  else
+    rm $PBF_FILE
+    send-to-matrix "tilemaker referential integrity check failed. Redownloading pbf file..."
+    curl --location -s "${PBF_DOWNLOAD_URL}" -o ${PBF_FILE}
+  fi
+else
+  echo "$PBF_FILE does not exist."
+  curl --location -s "${PBF_DOWNLOAD_URL}" -o ${PBF_FILE}
+fi
+
+# every Monday we delete the coastline shapefiles and re-download them
+if [[ $(date +"%u") -eq 1 ]]; then
+  echo "Deleting coastline shapefiles"
+  rm -rf ${OCEAN_SHAPEFILE_FINAL_FOLDER}
+fi
+
+if [ ! -d "${OCEAN_SHAPEFILE_FINAL_FOLDER}" ]; then
+  echo "Downloading coastline shapefiles"
+  curl --fail ${OCEAN_SHAPEFILE_URL} -o ${OCEAN_SHAPEFILE_ZIP}
+  unzip ${OCEAN_SHAPEFILE_ZIP}
+  mv ${OCEAN_SHAPEFILE_FOLDER} ${OCEAN_SHAPEFILE_FINAL_FOLDER}
+  rm ${OCEAN_SHAPEFILE_ZIP}
+fi
+
+if [[ ${PBF_FILE} -nt ${PBF_EXTRACT_FILE} ]]; then
+  echo "Europe file has been updated. Generating extract into ${PBF_EXTRACT_FILE}"
+  osmium extract ${PBF_FILE} --polygon germany-and-around.geojson -o ${PBF_EXTRACT_FILE} --overwrite --strategy=smart -S complete-partial-relations=80 -S types=multipolygon,boundary
+fi
+
+rm -f ${TILEMAKER_OUTPUT_FILE}
+
+podman pull ${IMAGE_NAME}
+
+# coastlines need to be placed into the root folder - not where the OSM pbf is!
+podman run \
+  -v {{ tilemaker_work_dir }}:/srv \
+  -v {{ tilemaker_work_dir }}/coastline:/coastline \
+  --name ${CONTAINER_NAME} \
+  --rm \
+  --cpu-shares 512 \
+  ${IMAGE_NAME} /srv/${PBF_EXTRACT_FILE} \
+  --output=/srv/${TILEMAKER_OUTPUT_FILE} \
+  --config=/srv/config-openmaptiles.json \
+  --process=/srv/process-openmaptiles.lua \
+
+# tilemaker doesn't like it when the output file already exists to we move it
+mv "${TILEMAKER_OUTPUT_FILE}" "${TILEMAKER_FINAL_OUTPUT_FILE}"
+
+TIMESTAMP=`osmium fileinfo -g header.option.osmosis_replication_timestamp ${PBF_FILE}`
+
+send-to-matrix "🏗️ mbtiles build complete on {{ inventory_hostname }}. OSM data from ${TIMESTAMP}"
