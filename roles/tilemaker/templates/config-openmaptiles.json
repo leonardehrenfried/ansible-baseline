@@ -1,4 +1,4 @@
-G
+{
 	"layers": {
 		"place":            { "minzoom":  0, "maxzoom": 14 },
 		"boundary":         { "minzoom":  0, "maxzoom": 14, "simplify_below": 12, "simplify_level": 0.0003, "simplify_ratio": 2 },
@@ -19,7 +19,7 @@ G
 		"building":          { "minzoom": 13, "maxzoom": 14 },
 
 		"water":             { "minzoom": 6,  "maxzoom": 14, "simplify_below": 12, "simplify_level": 0.0003, "simplify_ratio": 2},
-		"ocean":             { "minzoom": 0,  "maxzoom": 14, "source": "coastline/water_polygons.shp", "simplify_below": 13, "simplify_level": 0.0001, "simplify_ratio": 2, "write_to": "water", "index": true },
+		"ocean":             { "minzoom": 0,  "maxzoom": 14, "source": "coastline/water_polygons.shp", "filter_below": 12, "filter_area": 0.5, "simplify_below": 13, "simplify_level": 0.0001, "simplify_ratio": 2, "write_to": "water" },
 		"water_name":        { "minzoom": 14, "maxzoom": 14 },
 		"water_name_detail": { "minzoom": 14, "maxzoom": 14, "write_to": "water_name" },
 
@@ -53,7 +53,8 @@ G
 			"tilejson": "2.0.0",
 			"scheme": "xyz",
 			"type": "baselayer",
-			"format": "pbf"
+			"format": "pbf",
+			"tiles": ["https://example.com/liechtenstein/{z}/{x}/{y}.pbf"]
 		}
 	}
 }
