@@ -61,3 +61,28 @@
     group: caddy
     mode: 0660
   notify: Restart caddy
+
+- name: Create tile cache dir
+  file:
+    path: "{{ tileserver_work_dir }}/nginx-cache/"
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+
+- name: Install nginx
+  package:
+    name:
+      - nginx
+
+- name: Remove nginx default config
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: "Restart nginx"
+
+- name: Install nginx config
+  template:
+    src: "nginx/tileserver-cache.conf"
+    dest: /etc/nginx/sites-enabled/
+  notify: "Restart nginx"

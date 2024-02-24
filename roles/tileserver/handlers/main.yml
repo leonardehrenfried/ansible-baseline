@@ -4,7 +4,14 @@
     name: tileserver
     state: restarted
 
-- name: Restart monit
+- name: Check nginx conf
+  command: "/usr/sbin/nginx -t"
+  become: yes
+  listen: "Restart nginx"
+
+- name: Restart nginx service
   service:
-    name: monit
+    name: nginx
     state: restarted
+  listen: "Restart nginx"
+
