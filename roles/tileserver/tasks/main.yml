@@ -55,7 +55,7 @@
 
 - name: Caddyfile
   ansible.builtin.template:
-    src: templates/tileserver.caddy
+    src: templates/caddy/tileserver.caddy
     dest: /etc/caddy/
     owner: caddy
     group: caddy
