@@ -2,3 +2,4 @@
 tileserver_work_dir: "/var/tileserver/"
 tileserver_cache_dir: "{{ tileserver_work_dir }}/cache/"
 tileserver_port: 5000
+tileserver_cache_port: 5001

@@ -4,7 +4,7 @@
     8.868700802222634,
     48.59676237694106
   ],
-  "glyphs": "https://tiles.stadtnavi.eu/tiles/openmaptiles/fonts/{fontstack}/{range}.pbf",
+  "glyphs": "https://{{ tileserver_domain }}/fonts/{fontstack}/{range}.pbf",
   "id": "c3e8e9d6-1155-4329-80f3-6c03a2bcc7a4",
   "layers": [
     {
