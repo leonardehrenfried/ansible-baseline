@@ -17,6 +17,7 @@ RuntimeMaxSec=21600
 ExecStopPost=systemd-failure-notification "%n"
 
 Restart=on-failure
+RestartSec=3m
 
 [Install]
 WantedBy=multi-user.target
