@@ -16,6 +16,7 @@ OCEAN_SHAPEFILE_ZIP=${OCEAN_SHAPEFILE_FOLDER}.zip
 OCEAN_SHAPEFILE_FINAL_FOLDER=coastline
 
 podman stop ${CONTAINER_NAME} || true
+podman rm ${CONTAINER_NAME} || true
 
 if [ -f "$PBF_FILE" ]; then
   echo "$PBF_FILE exists. Downloading updates."
