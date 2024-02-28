@@ -75,7 +75,6 @@ podman run \
   -v {{ otp_base_dir }}/${BUILD_DIR}:/var/opentripplanner/:z \
   --name ${CONTAINER_NAME} \
   --rm \
-  --log-driver=journald \
   -e JAVA_TOOL_OPTIONS="{{ otp_graph_build_jvm_opts }}" \
   ${IMAGE_NAME} --build --save
 
