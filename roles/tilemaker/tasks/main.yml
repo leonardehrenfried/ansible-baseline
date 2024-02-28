@@ -21,7 +21,12 @@
     - build-mbtiles
     - config-openmaptiles.json
     - process-openmaptiles.lua
-    - germany-and-around.geojson
+  notify: Restart tilemaker
+
+- name: Copy area.geojson
+  template:
+    src: tilemaker/area.geojson
+    dest: "{{ tilemaker_work_dir }}"
   notify: Restart tilemaker
 
 - name: Make script executable
