@@ -29,6 +29,7 @@
   template: src={{ item }} dest={{ tileserver_work_dir }}
   with_items:
     - streets.json
+    - bicycle.json
     - satellite-overlay.json
     - tileserver-config.json
   notify: Restart tileserver
