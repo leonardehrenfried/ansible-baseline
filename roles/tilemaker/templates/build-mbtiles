@@ -36,8 +36,8 @@ else
   curl --location -s "${PBF_DOWNLOAD_URL}" -o ${PBF_FILE}
 fi
 
-# every Monday we delete the coastline shapefiles and re-download them
-if [[ $(date +"%u") -eq 1 ]]; then
+# every Sunday we delete the coastline shapefiles and re-download them
+if [[ $(date +"%u") -eq 0 ]]; then
   echo "Deleting coastline shapefiles"
   rm -rf ${OCEAN_SHAPEFILE_FINAL_FOLDER}
 fi
