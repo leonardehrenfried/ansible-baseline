@@ -15,6 +15,14 @@
   with_items:
     - "{{ photon_data_dir }}"
 
+- name: Create volume
+  containers.podman.podman_volume:
+    state: present
+    name: photon-data
+    options:
+      - "device={{ photon_data_dir }}/data"
+
+
 - name: Install systemd files
   template:
     src: systemd/{{ item }}

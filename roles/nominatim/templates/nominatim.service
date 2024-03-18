@@ -26,7 +26,7 @@ ExecStart=podman run --rm --name ${CONTAINER_NAME} \
   -e IMPORT_WIKIPEDIA \
   -e NOMINATIM_PASSWORD \
   -p 5432:5432 \
-  -v {{ nominatim_postgres_volume }}:/var/lib/postgresql/14/main:z \
+  -v nominatim-postgres:/var/lib/postgresql/14/main:z \
   ${CONTAINER_IMAGE}
 
 ExecStop=-podman stop ${CONTAINER_NAME}
