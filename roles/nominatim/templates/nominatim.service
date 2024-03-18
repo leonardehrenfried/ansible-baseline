@@ -1,0 +1,33 @@
+[Unit]
+Description=Nominatim
+
+[Service]
+
+Environment=CONTAINER_IMAGE=docker.io/mediagis/nominatim:4.3-2024-02-21T17-21
+Environment=CONTAINER_NAME=nominatim
+Environment=PBF_URL={{ nominatim_pbf_url }}
+Environment=REPLICATION_URL={{ nominatim_replication_url }}
+Environment=IMPORT_WIKIPEDIA=true
+Environment=NOMINATIM_PASSWORD={{ nominatim_db_password }}
+TimeoutStartSec=0
+Restart=always
+RestartSec=120
+
+ExecStartPre=-podman stop ${CONTAINER_NAME}
+ExecStartPre=-podman rm ${CONTAINER_NAME}
+ExecStartPre=-podman pull ${CONTAINER_IMAGE}
+ExecStart=podman run --rm --name ${CONTAINER_NAME} \
+  --shm-size=2g \
+  --log-driver=journald \
+  -e PBF_URL \
+  -e REPLICATION_URL \
+  -e IMPORT_WIKIPEDIA \
+  -e NOMINATIM_PASSWORD \
+  -p 5432:5432 \
+  -v {{ nominatim_postgres_volume }}:/var/lib/postgresql/14/main:z \
+  ${CONTAINER_IMAGE}
+
+ExecStop=-podman stop ${CONTAINER_NAME}
+
+[Install]
+WantedBy=multi-user.target

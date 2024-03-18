@@ -1,0 +1,3 @@
+#! /bin/bash -e
+
+podman exec -i nominatim sudo -u nominatim nominatim replication --project-dir /nominatim --once --no-index

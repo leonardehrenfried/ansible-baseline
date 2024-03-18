@@ -1,0 +1,13 @@
+[Unit]
+Description=Update nominatim with the update files from Geofabrik
+Requires=docker.service
+After=docker.service
+
+[Service]
+WorkingDirectory={{ nominatim_data_dir }}
+ExecStart={{ nominatim_data_dir }}/update-nominatim
+
+ExecStopPost=systemd-failure-notification "%n"
+
+[Install]
+WantedBy=multi-user.target

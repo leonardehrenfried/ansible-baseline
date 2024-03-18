@@ -1,0 +1,39 @@
+---
+- name: Install base packages
+  package:
+    name:
+      - python3-psycopg2
+    state: present
+
+- name: Create nominatim config directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0775
+  with_items:
+    - "{{ nominatim_data_dir }}"
+    - "{{ nominatim_postgres_volume }}"
+
+- name: Install import files for nominatim
+  template:
+    src: "{{ item }}"
+    dest: "{{ nominatim_data_dir }}"
+    mode: "+x"
+  with_items:
+    - update-nominatim
+
+- name: Install systemd files for nominatim
+  template: src={{ item }} dest=/etc/systemd/system/
+  with_items:
+    - nominatim.service
+    - nominatim-update.service
+    - nominatim-update.timer
+  notify: "Restart nominatim"
+
+- name: Start nomimatim and photon services
+  systemd: state=started name="{{ item }}" enabled=yes daemon_reload=yes
+  with_items:
+    - nominatim.service
+    - nominatim-update.timer
