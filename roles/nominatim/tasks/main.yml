@@ -45,6 +45,8 @@
     name: nominatim-postgres
     options:
       - "device={{ nominatim_postgres_volume }}"
+  become: true
+  become_user: nominatim
 
 - name: Install systemd files for nominatim
   template: src={{ item }} dest=/etc/systemd/system/
