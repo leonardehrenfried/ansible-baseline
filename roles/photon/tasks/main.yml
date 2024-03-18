@@ -11,6 +11,16 @@
       - python3-docker
     state: present
 
+- name: Create photon config directory
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: nominatim
+    group: nominatim
+    mode: 0775
+  with_items:
+    - "{{ photon_data_dir }}"
+
 - name: Install systemd files
   template: src={{ item }} dest=/etc/systemd/system/
   with_items:
