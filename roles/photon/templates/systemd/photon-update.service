@@ -2,6 +2,7 @@
 Description=Update photon
 
 [Service]
+User=nominatim
 ExecStart=podman exec photon /usr/local/bin/nominatim-update
 
 [Install]

@@ -3,7 +3,7 @@ Description=Photon Pelias Adapter
 
 [Service]
 
-Environment=CONTAINER_IMAGE=podman.io/mfdz/photon-pelias-adapter:{{ photon_pelias_adapter_tag }}
+Environment=CONTAINER_IMAGE=docker.io/mfdz/photon-pelias-adapter:{{ photon_pelias_adapter_tag }}
 Environment=CONTAINER_NAME=photon-pelias-adapter
 TimeoutStartSec=0
 Restart=always

@@ -2,6 +2,7 @@
 Description=Nominatim
 
 [Service]
+User=nominatim
 
 Environment=CONTAINER_IMAGE=docker.io/mediagis/nominatim:4.3-2024-02-21T17-21
 Environment=CONTAINER_NAME=nominatim
