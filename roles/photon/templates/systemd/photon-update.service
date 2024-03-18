@@ -1,0 +1,8 @@
+[Unit]
+Description=Update photon
+
+[Service]
+ExecStart=podman exec photon /usr/local/bin/nominatim-update
+
+[Install]
+WantedBy=multi-user.target

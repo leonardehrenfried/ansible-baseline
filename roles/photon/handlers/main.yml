@@ -1,0 +1,12 @@
+---
+- name: Restart photon
+  service:
+    name: photon
+    state: restarted
+
+- name: Restart photon-pelias-adapter
+  service:
+    name: photon-pelias-adapter
+    state: restarted
+
+

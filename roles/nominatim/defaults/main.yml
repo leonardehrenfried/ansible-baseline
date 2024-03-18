@@ -1,3 +1,4 @@
 ---
 nominatim_data_dir: /var/nominatim/
 nominatim_postgres_volume: "{{ nominatim_data_dir }}/postgres/"
+nominatim_podman_network: nominatim

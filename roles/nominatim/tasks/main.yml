@@ -24,7 +24,11 @@
   with_items:
     - update-nominatim
 
-- name: Install systemd files for nominatim
+- name: Create nominatim network
+  containers.podman.podman_network:
+    name: nominatim
+
+- me: Install systemd files for nominatim
   template: src={{ item }} dest=/etc/systemd/system/
   with_items:
     - nominatim.service

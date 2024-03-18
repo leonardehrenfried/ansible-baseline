@@ -1,0 +1,21 @@
+[Unit]
+Description=Photon Pelias Adapter
+
+[Service]
+
+Environment=CONTAINER_IMAGE=podman.io/mfdz/photon-pelias-adapter:{{ photon_pelias_adapter_tag }}
+Environment=CONTAINER_NAME=photon-pelias-adapter
+TimeoutStartSec=0
+Restart=always
+
+Environment=PHOTON_URL=https://{{ photon_hostname }}
+
+ExecStartPre=-podman pull ${CONTAINER_IMAGE}
+ExecStartPre=-podman stop ${CONTAINER_NAME}
+ExecStartPre=-podman rm ${CONTAINER_NAME}
+ExecStart=podman run --name ${CONTAINER_NAME} --log-driver=journald -p {{ pelias_adapter_port }}:8080 -e PHOTON_URL ${CONTAINER_IMAGE}
+
+ExecStop=-podman stop ${CONTAINER_NAME}
+
+[Install]
+WantedBy=multi-user.target
