@@ -2,7 +2,7 @@
 Description=Photon
 
 [Service]
-Environment=CONTAINER_IMAGE=ghcr.io/leonardehrenfried/photon:0.5.0-2024-03-19T13-34
+Environment=CONTAINER_IMAGE=ghcr.io/leonardehrenfried/photon:0.5.0-2024-03-19T14-15`
 Environment=CONTAINER_NAME=photon
 TimeoutStartSec=0
 RestartSec=15
@@ -11,6 +11,9 @@ Restart=always
 Environment=NOMINATIM_DB_HOST=nominatim
 Environment=NOMINATIM_DB_PASSWORD={{ nominatim_db_password }}
 
+ExecStartPre=-podman stop ${CONTAINER_NAME}
+ExecStartPre=-podman rm ${CONTAINER_NAME}
+
 ExecStart=podman run --rm --name ${CONTAINER_NAME} \
     --log-driver=journald \
     --network {{ nominatim_podman_network }} \
@@ -18,7 +21,7 @@ ExecStart=podman run --rm --name ${CONTAINER_NAME} \
     -p {{ photon_port }}:2322 \
     -e NOMINATIM_DB_HOST \
     -e NOMINATIM_DB_PASSWORD \
-    ${CONTAINER_IMAGE} photon -enable-update-api
+    ${CONTAINER_IMAGE}
 
 ExecStop=-podman stop ${CONTAINER_NAME}
 
