@@ -2,7 +2,7 @@
 Description=Photon
 
 [Service]
-Environment=CONTAINER_IMAGE=ghcr.io/leonardehrenfried/photon:0.5.0-2024-03-18T14-19
+Environment=CONTAINER_IMAGE=ghcr.io/leonardehrenfried/photon:0.5.0-2024-03-19T13-34
 Environment=CONTAINER_NAME=photon
 TimeoutStartSec=0
 RestartSec=15
