@@ -1,10 +1,16 @@
 {{ photon_domain }} {
-	reverse_proxy /pelias/* localhost:{{ pelias_adapter_port }}
+  # proxy to pelias, remove /pelias/ prefix
+  handle_path /pelias/* {
+    rewrite /pelias/ /
+	  reverse_proxy * localhost:{{ pelias_adapter_port }}
+  }
 
+  # block nominatim update from the outside world
 	@blocked {
     path /nominatim-update*
   }
   respond @blocked 403
 
-	reverse_proxy /* localhost:{{ photon_port }}
+  # proxy the rest to photon
+  reverse_proxy /* localhost:{{ photon_port }}
 }
