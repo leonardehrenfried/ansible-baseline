@@ -5,23 +5,6 @@
       - python3-psycopg2
     state: present
 
-- name: Create photon data directory
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: root
-    group: root
-    mode: 0775
-  with_items:
-    - "{{ photon_data_dir }}"
-
-- name: Create volume
-  containers.podman.podman_volume:
-    state: present
-    name: photon-data
-    options:
-      - "device={{ photon_data_dir }}/data"
-
 - name: Install systemd files
   template:
     src: systemd/{{ item }}
@@ -46,3 +29,12 @@
     - photon.service
     - photon-update.timer
     - photon-pelias-adapter.service
+
+- name: Caddyfile
+  ansible.builtin.template:
+    src: photon.caddy
+    dest: /etc/caddy/
+    owner: caddy
+    group: caddy
+    mode: 0660
+  notify: Restart caddy

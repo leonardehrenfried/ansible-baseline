@@ -8,7 +8,7 @@ Environment=CONTAINER_NAME=photon-pelias-adapter
 TimeoutStartSec=0
 Restart=always
 
-Environment=PHOTON_URL=https://{{ photon_hostname }}
+Environment=PHOTON_URL=https://{{ photon_domain }}
 
 ExecStartPre=-podman pull ${CONTAINER_IMAGE}
 ExecStartPre=-podman stop ${CONTAINER_NAME}

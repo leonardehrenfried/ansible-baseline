@@ -1,0 +1,4 @@
+{{ photon_domain }} {
+	reverse_proxy /pelias/* localhost:{{ pelias_adapter_port }}
+	reverse_proxy /* localhost:{{ photon_port }}
+}

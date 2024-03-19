@@ -13,7 +13,7 @@ Environment=NOMINATIM_DB_PASSWORD={{ nominatim_db_password }}
 
 ExecStart=podman run --rm --name ${CONTAINER_NAME} \
     --log-driver=journald \
-    --network photon \
+    --network {{ nominatim_podman_network }} \
     -v photon-data:/photon/photon_data:Z \
     -p {{ photon_port }}:2322 \
     -e NOMINATIM_DB_HOST \
