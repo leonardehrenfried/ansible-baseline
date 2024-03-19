@@ -2,7 +2,7 @@
 - name: Install base packages
   package:
     name:
-      - python3-psycopg2
+      - curl
     state: present
 
 - name: Install systemd files

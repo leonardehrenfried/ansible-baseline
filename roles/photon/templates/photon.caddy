@@ -1,4 +1,10 @@
 {{ photon_domain }} {
 	reverse_proxy /pelias/* localhost:{{ pelias_adapter_port }}
+
+	@blocked {
+    path /nominatim-update*
+  }
+  respond @blocked 403
+
 	reverse_proxy /* localhost:{{ photon_port }}
 }
