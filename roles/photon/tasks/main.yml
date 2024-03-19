@@ -9,8 +9,8 @@
   file:
     path: "{{ item }}"
     state: directory
-    owner: nominatim
-    group: nominatim
+    owner: root
+    group: root
     mode: 0775
   with_items:
     - "{{ photon_data_dir }}"
@@ -21,7 +21,6 @@
     name: photon-data
     options:
       - "device={{ photon_data_dir }}/data"
-
 
 - name: Install systemd files
   template:

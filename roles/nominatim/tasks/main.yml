@@ -5,30 +5,22 @@
       - python3-psycopg2
     state: present
 
-- name: Create user nominatim
-  user:
-    name: nominatim
-    create_home: True
-    shell: /bin/bash
-    state: present
-
 - name: Create nominatim config directory
   file:
     path: "{{ item }}"
     state: directory
-    owner: nominatim
-    group: nominatim
+    owner: root
+    group: root
     mode: 0775
   with_items:
     - "{{ nominatim_data_dir }}"
-    - "{{ nominatim_postgres_volume }}"
 
 - name: Install import files for nominatim
   template:
     src: "{{ item }}"
     dest: "{{ nominatim_data_dir }}"
-    owner: nominatim
-    group: nominatim
+    owner: root
+    group: root
     mode: "+x"
   with_items:
     - update-nominatim
@@ -36,17 +28,6 @@
 - name: Create nominatim network
   containers.podman.podman_network:
     name: nominatim
-  become: true
-  become_user: nominatim
-
-- name: Create volume
-  containers.podman.podman_volume:
-    state: present
-    name: nominatim-postgres
-    options:
-      - "device={{ nominatim_postgres_volume }}"
-  become: true
-  become_user: nominatim
 
 - name: Install systemd files for nominatim
   template: src={{ item }} dest=/etc/systemd/system/

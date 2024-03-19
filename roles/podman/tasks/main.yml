@@ -44,3 +44,9 @@
     state: file
     mode: '0755'
   when: podman_authorized_repos is defined
+
+- name: Set custom container storage location
+  template:
+    src: storage.conf
+    dest: /etc/containers/
+  when: podman_root_container_storage_dir is defined

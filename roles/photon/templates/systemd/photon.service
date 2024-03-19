@@ -2,7 +2,6 @@
 Description=Photon
 
 [Service]
-User=nominatim
 Environment=CONTAINER_IMAGE=ghcr.io/leonardehrenfried/photon:0.5.0-2024-03-18T14-19
 Environment=CONTAINER_NAME=photon
 TimeoutStartSec=0
@@ -15,7 +14,7 @@ Environment=NOMINATIM_DB_PASSWORD={{ nominatim_db_password }}
 ExecStart=podman run --rm --name ${CONTAINER_NAME} \
     --log-driver=journald \
     --network photon \
-    -v photon-data:/photon/photon_data:z \
+    -v photon-data:/photon/photon_data:Z \
     -p {{ photon_port }}:2322 \
     -e NOMINATIM_DB_HOST \
     -e NOMINATIM_DB_PASSWORD \

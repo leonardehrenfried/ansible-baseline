@@ -2,9 +2,7 @@
 Description=Nominatim
 
 [Service]
-User=nominatim
-
-Environment=CONTAINER_IMAGE=docker.io/mediagis/nominatim:4.3-2024-02-21T17-21
+Environment=CONTAINER_IMAGE=docker.io/mediagis/nominatim:4.4-2024-03-18T16-31
 Environment=CONTAINER_NAME=nominatim
 Environment=PBF_URL={{ nominatim_pbf_url }}
 Environment=REPLICATION_URL={{ nominatim_replication_url }}

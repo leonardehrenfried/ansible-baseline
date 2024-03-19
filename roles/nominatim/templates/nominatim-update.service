@@ -2,7 +2,6 @@
 Description=Update nominatim with the update files from Geofabrik
 
 [Service]
-User=nominatim
 WorkingDirectory={{ nominatim_data_dir }}
 ExecStart={{ nominatim_data_dir }}/update-nominatim
 
