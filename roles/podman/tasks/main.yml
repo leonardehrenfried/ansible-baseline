@@ -45,10 +45,10 @@
     mode: '0755'
   when: podman_authorized_repos is defined
 
-
 - name: Enable lingering
-  ansible.builtin.command: "loginctl enable-linger {{ item }}"
-  register: linger
+  ansible.builtin.command:
+    cmd: "loginctl enable-linger {{ item }}"
+    creates: "/var/lib/systemd/linger/{{ item }}"
   with_items: "{{ podman_prune_users }}"
 
 - name: Set custom container storage location
