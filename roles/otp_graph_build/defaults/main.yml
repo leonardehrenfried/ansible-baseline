@@ -1,5 +1,6 @@
 ---
 otp_base_dir: "/var/otp"
+otp_template_path: "otp"
 otp_restart_after_graph_build: false
 manual_download_gtfs_feeds: []
 manual_osm_downloads: []

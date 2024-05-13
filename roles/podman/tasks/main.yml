@@ -45,6 +45,14 @@
     mode: '0755'
   when: podman_authorized_repos is defined
 
+- name: Create users
+  user:
+    name: "{{ item }}"
+    create_home: True
+    shell: /bin/bash
+    state: present
+  with_items: "{{ podman_prune_users }}"
+
 - name: Enable lingering
   ansible.builtin.command:
     cmd: "loginctl enable-linger {{ item }}"

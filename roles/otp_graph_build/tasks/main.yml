@@ -48,7 +48,7 @@
 
 - name: Copy OTP config
   template:
-    src: otp/{{ item }}
+    src: "{{ otp_template_path }}/{{ item }}"
     dest: "{{ otp_base_dir }}/build/"
     owner: otp
     group: otp
