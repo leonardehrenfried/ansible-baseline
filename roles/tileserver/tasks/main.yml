@@ -19,6 +19,11 @@
     src: sprites
     dest: "{{ tileserver_work_dir }}"
 
+- name: Copy unauthorized.png
+  copy:
+    src: unauthorized.png
+    dest: /usr/share/nginx/html/
+
 - name: Symlink fonts
   ansible.builtin.file:
     dest: "{{ tileserver_work_dir }}/fonts"
