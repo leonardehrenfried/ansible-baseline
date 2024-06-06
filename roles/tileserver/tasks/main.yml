@@ -22,7 +22,7 @@
 - name: Copy unauthorized.png
   copy:
     src: unauthorized.png
-    dest: /usr/share/nginx/html/
+    dest: /var/www/html/
 
 - name: Symlink fonts
   ansible.builtin.file:
