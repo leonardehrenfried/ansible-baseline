@@ -19,7 +19,7 @@ BUILD_DIR=build
 OUTPUT_DIR=latest
 
 podman stop $CONTAINER_NAME || true
-podman rm $CONTAINER_NAME || true
+podman rm --force $CONTAINER_NAME || true
 
 mkdir -p -m 775 build
 cd build
