@@ -1,0 +1,3 @@
+{{ digitransit_domain_name }} {
+  reverse_proxy /* localhost:{{ digitransit_port }}
+}
