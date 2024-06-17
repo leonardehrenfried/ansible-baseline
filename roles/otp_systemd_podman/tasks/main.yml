@@ -1,21 +1,4 @@
 ---
-- name: Copy OTP config
-  template:
-    src: otp/{{ item }}
-    dest: "{{ otp_base_dir }}/build/"
-    owner: otp
-    group: otp
-  with_items:
-    - otp-config.json
-    - router-config.json
-    - build-config.json
-  notify: Start graph build
-
-- name: Ensure build-config.json is not in latest folder
-  ansible.builtin.file:
-    path: "{{ otp_base_dir }}/latest/build-config.json"
-    state: absent
-
 - name: Install systemd files
   ansible.builtin.template:
     src: systemd/{{ item }}
