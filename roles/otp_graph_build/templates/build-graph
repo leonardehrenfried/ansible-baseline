@@ -4,9 +4,7 @@ PBF_FILE="opentripplanner.osm.pbf"
 
 # freely available elevation data in geotiff format (https://srtm.csi.cgiar.org/)
 ELEVATION_BASE_URL="https://srtm.csi.cgiar.org/wp-content/uploads/files/srtm_5x5/TIFF/"
-#ELEVATION_FILES=("srtm_38_01" "srtm_38_03" "srtm_39_03" "srtm_38_02" "srtm_39_01" "srtm_39_02")
-# setting elevation files to an empty list, computing it would take more memory
-ELEVATION_FILES=()
+ELEVATION_FILES=({{ otp_elevation_files|map("to_json")|join(" ") }})
 
 IMAGE_NAME="{{ otp_image }}"
 CONTAINER_NAME="graph-build"
