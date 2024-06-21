@@ -1,3 +1,7 @@
 ---
 tilemaker_pbf_download_url: http://download.geofabrik.de/europe/germany-latest.osm.pbf
 tilemaker_work_dir: "/var/tilemaker/"
+tilemaker_create_extract: true
+tilemaker_check_referential_integrity: true
+# https://boundingbox.klokantech.com/ -> CSV
+tilemaker_bounding_box: "-2.81,41.91,23.52,59.81"

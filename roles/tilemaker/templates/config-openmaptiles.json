@@ -42,7 +42,7 @@
 		"description": "Tile config based on OpenMapTiles schema",
 		"compress": "gzip",
 		"bounding_box" : [
-			-2.81,41.91,23.52,59.81
+			{{ tilemaker_bounding_box }}
 		],
 		"filemetadata": {
 			"tilejson": "2.0.0",

@@ -6,6 +6,7 @@
       - pyosmium
       - osmium-tool
       - curl
+      - rsync
 
 - name: Create data directory
   file:
@@ -28,6 +29,7 @@
     src: tilemaker/area.geojson
     dest: "{{ tilemaker_work_dir }}"
   notify: Restart tilemaker
+  when: tilemaker_create_extract
 
 - name: Make script executable
   file:

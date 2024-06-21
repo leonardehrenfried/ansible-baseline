@@ -1,5 +1,7 @@
 #! /bin/bash -e
 
+CURL_OPTS="--location --fail -s --show-error -#"
+
 PBF_DOWNLOAD_URL=https://download.geofabrik.de/europe-latest.osm.pbf
 PBF_FILE=europe.osm.pbf
 PBF_EXTRACT_FILE=tilemaker-input.osm.pbf
@@ -22,6 +24,7 @@ if [ -f "$PBF_FILE" ]; then
   echo "$PBF_FILE exists. Downloading updates."
   pyosmium-up-to-date -v $PBF_FILE
 
+{% if tilemaker_check_referential_integrity %}
   echo "Checking referential integrity of ${PBF_FILE}"
   # sometimes the update process results in a file with nodes missing from ways
   if osmium check-refs ${PBF_FILE}; then
@@ -29,11 +32,12 @@ if [ -f "$PBF_FILE" ]; then
   else
     rm $PBF_FILE
     send-to-matrix "tilemaker referential integrity check failed. Redownloading pbf file..."
-    curl --location -s "${PBF_DOWNLOAD_URL}" -o ${PBF_FILE}
+    curl $CURL_OPTS "${PBF_DOWNLOAD_URL}" -o ${PBF_FILE}
   fi
+{% endif %}
 else
   echo "$PBF_FILE does not exist."
-  curl --location -s "${PBF_DOWNLOAD_URL}" -o ${PBF_FILE}
+  curl $CURL_OPTS "${PBF_DOWNLOAD_URL}" -o ${PBF_FILE}
 fi
 
 # every Sunday we delete the coastline shapefiles and re-download them
@@ -50,10 +54,16 @@ if [ ! -d "${OCEAN_SHAPEFILE_FINAL_FOLDER}" ]; then
   rm ${OCEAN_SHAPEFILE_ZIP}
 fi
 
+
+{% if tilemaker_create_extract %}
 if [[ ${PBF_FILE} -nt ${PBF_EXTRACT_FILE} ]]; then
   echo "Europe file has been updated. Generating extract into ${PBF_EXTRACT_FILE}"
   osmium extract ${PBF_FILE} --polygon area.geojson -o ${PBF_EXTRACT_FILE} --overwrite --strategy=smart
 fi
+{% else %}
+# using rsync to speed up copying of local file
+rsync "${PBF_FILE}" "${PBF_EXTRACT_FILE}"
+{% endif %}
 
 rm -f ${TILEMAKER_OUTPUT_FILE}
 
