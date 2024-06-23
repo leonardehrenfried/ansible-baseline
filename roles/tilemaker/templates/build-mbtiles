@@ -4,7 +4,8 @@ CURL_OPTS="--location --fail -s --show-error -#"
 
 PBF_DOWNLOAD_URL=https://download.geofabrik.de/europe-latest.osm.pbf
 PBF_FILE=europe.osm.pbf
-PBF_EXTRACT_FILE=tilemaker-input.osm.pbf
+RENUMBERED=renumbered.osm.pbf
+TILEMAKER_INPUT_FILE=tilemaker-input.osm.pbf
 
 IMAGE_NAME="ghcr.io/leonardehrenfried/tilemaker:2024-02-23T12-42"
 CONTAINER_NAME="tilemaker"
@@ -48,38 +49,41 @@ fi
 
 if [ ! -d "${OCEAN_SHAPEFILE_FINAL_FOLDER}" ]; then
   echo "Downloading coastline shapefiles"
-  curl --fail ${OCEAN_SHAPEFILE_URL} -o ${OCEAN_SHAPEFILE_ZIP}
+  curl ${CURL_OPTS} ${OCEAN_SHAPEFILE_URL} -o ${OCEAN_SHAPEFILE_ZIP}
   unzip ${OCEAN_SHAPEFILE_ZIP}
   mv ${OCEAN_SHAPEFILE_FOLDER} ${OCEAN_SHAPEFILE_FINAL_FOLDER}
   rm ${OCEAN_SHAPEFILE_ZIP}
 fi
 
-
+if [[ ${PBF_FILE} -nt ${TILEMAKER_INPUT_FILE} ]]; then
 {% if tilemaker_create_extract %}
-if [[ ${PBF_FILE} -nt ${PBF_EXTRACT_FILE} ]]; then
-  echo "Europe file has been updated. Generating extract into ${PBF_EXTRACT_FILE}"
-  osmium extract ${PBF_FILE} --polygon area.geojson -o ${PBF_EXTRACT_FILE} --overwrite --strategy=smart
-fi
+  echo "Europe file has been updated. Generating extract into ${TILEMAKER_INPUT_FILE}"
+  osmium extract ${PBF_FILE} --polygon area.geojson -o ${TILEMAKER_INPUT_FILE} --overwrite --strategy=smart
+  rm -f ${RENUMBERED}
+  osmium renumber ${TILEMAKER_INPUT_FILE} -o ${RENUMBERED}
+  mv ${RENUMBERED} ${TILEMAKER_INPUT_FILE}
 {% else %}
-# using rsync to speed up copying of local file
-rsync "${PBF_FILE}" "${PBF_EXTRACT_FILE}"
+  osmium renumber ${PBF_FILE} -o ${TILEMAKER_INPUT_FILE} --overwrite
 {% endif %}
+fi
 
 rm -f ${TILEMAKER_OUTPUT_FILE}
 
 podman pull ${IMAGE_NAME}
 
 # coastlines need to be placed into the root folder - not where the OSM pbf is!
+# assume that nodes are ordered sequentially, neeeds osmium renumber
 podman run \
   -v {{ tilemaker_work_dir }}:/srv \
   -v {{ tilemaker_work_dir }}/coastline:/coastline \
   --name ${CONTAINER_NAME} \
   --rm \
   --cpu-shares 512 \
-  ${IMAGE_NAME} /srv/${PBF_EXTRACT_FILE} \
+  ${IMAGE_NAME} /srv/${TILEMAKER_INPUT_FILE} \
   --output=/srv/${TILEMAKER_OUTPUT_FILE} \
   --config=/srv/config-openmaptiles.json \
   --process=/srv/process-openmaptiles.lua \
+  --compact
 
 # tilemaker doesn't like it when the output file already exists to we move it
 mv "${TILEMAKER_OUTPUT_FILE}" "${TILEMAKER_FINAL_OUTPUT_FILE}"

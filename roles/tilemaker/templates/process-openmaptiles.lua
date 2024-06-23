@@ -612,9 +612,9 @@ function way_function()
 							or has_truthy_tag("cycleway:left")
 							or has_truthy_tag("cycleway:right")
 							or has_truthy_tag("cycleway:both")
-							or Holds("bicycle") and Find("bicycle") == "designated"
+							or (Holds("bicycle") and Find("bicycle") == "designated")
 
-			if has_cycleway or highway == "cycleway" then
+		if has_cycleway or highway == "cycleway" then
 			AttributeNumeric("cycleway", 1)
  		end
 	end
