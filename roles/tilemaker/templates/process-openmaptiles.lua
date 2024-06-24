@@ -351,6 +351,17 @@ function write_to_transportation_layer(minzoom, highway_class, subclass, ramp, s
 	end
 	AttributeNumeric("layer", tonumber(Find("layer")) or 0, accessMinzoom)
 	SetBrunnelAttributes()
+
+	local has_cycleway = has_truthy_tag("cycleway")
+      							or has_truthy_tag("cycleway:left")
+      							or has_truthy_tag("cycleway:right")
+      							or has_truthy_tag("cycleway:both")
+      							or (Holds("bicycle") and Find("bicycle") == "designated")
+
+  if has_cycleway or highway == "cycleway" then
+  		AttributeNumeric("cycleway", 1)
+  end
+
 	-- We do not write any other attributes for areas.
 	if is_area then
 		SetMinZoomByAreaWithLimit(minzoom)
@@ -386,6 +397,8 @@ function write_to_transportation_layer(minzoom, highway_class, subclass, ramp, s
 		if Find("expressway") == "yes" then AttributeBoolean("expressway", true, 7) end
 		if Holds("mtb_scale") then Attribute("mtb_scale", Find("mtb:scale"), 10) end
 	end
+
+
 end
 
 -- Process way tags
@@ -575,6 +588,7 @@ function way_function()
 			minzoom = INVALID_ZOOM
 		end
 
+
 		-- Write to layer
 		if minzoom <= 14 then
 			write_to_transportation_layer(minzoom, h, subclass, ramp, service, false, is_road, is_highway_area)
@@ -608,15 +622,7 @@ function way_function()
 			end
 		end
 
-		local has_cycleway = has_truthy_tag("cycleway")
-							or has_truthy_tag("cycleway:left")
-							or has_truthy_tag("cycleway:right")
-							or has_truthy_tag("cycleway:both")
-							or (Holds("bicycle") and Find("bicycle") == "designated")
 
-		if has_cycleway or highway == "cycleway" then
-			AttributeNumeric("cycleway", 1)
- 		end
 	end
 
 	-- Railways ('transportation' and 'transportation_name')

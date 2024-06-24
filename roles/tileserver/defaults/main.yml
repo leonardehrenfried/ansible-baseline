@@ -10,5 +10,5 @@ tileserver_cache_settings:
     server_cache: "1d"
     browser_cache: 3600
   - filetype: pbf
-    server_cache: "1h"
+    server_cache: "15m"
     browser_cache: 3600
