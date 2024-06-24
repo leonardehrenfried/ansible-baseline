@@ -25,6 +25,7 @@ ExecStart=podman run --rm --name ${CONTAINER_NAME} \
     -p {{ photon_port }}:2322 \
     -e NOMINATIM_DB_HOST \
     -e NOMINATIM_DB_PASSWORD \
+    -e PHOTON_LANGUAGES={{ photon_languages|join(",")}} \
     ${CONTAINER_IMAGE}
 
 ExecStop=-podman stop ${CONTAINER_NAME}

@@ -43,7 +43,7 @@ tags: []
 # L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
 # range specifiers can be set and are separated by ','
 dependencies:
-  containers.podman: 1.10.1
+  containers.podman: 1.15.3
 
 # The URL of the originating SCM repository
 repository: https://github.com/leonardehrenfried/ansible-baseline
