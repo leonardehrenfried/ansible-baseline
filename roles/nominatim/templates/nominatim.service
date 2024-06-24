@@ -2,7 +2,7 @@
 Description=Nominatim
 
 [Service]
-Environment=CONTAINER_IMAGE=docker.io/mediagis/nominatim:4.4-2024-03-18T16-31
+Environment=CONTAINER_IMAGE={{ nominatim_image }}
 Environment=CONTAINER_NAME=nominatim
 Environment=PBF_URL={{ nominatim_pbf_url }}
 Environment=REPLICATION_URL={{ nominatim_replication_url }}
@@ -23,7 +23,10 @@ ExecStart=podman run --rm --name ${CONTAINER_NAME} \
   -e REPLICATION_URL \
   -e IMPORT_WIKIPEDIA \
   -e NOMINATIM_PASSWORD \
+  -e IMPORT_STYLE=extratags \
   -p 5432:5432 \
+  -v nominatim-flatnode:/nominatim/flatnode \
+  -v {{ nominatim_data_dir }}/import-extratags.style:/usr/local/etc/nominatim/import-extratags.style \
   -v nominatim-postgres:/var/lib/postgresql/14/main:z \
   ${CONTAINER_IMAGE}
 

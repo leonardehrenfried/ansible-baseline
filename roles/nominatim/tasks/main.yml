@@ -24,6 +24,7 @@
     mode: "+x"
   with_items:
     - update-nominatim
+    - import-extratags.style
 
 - name: Create nominatim network
   containers.podman.podman_network:
