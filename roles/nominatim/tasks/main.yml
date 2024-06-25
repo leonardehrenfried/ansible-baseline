@@ -3,6 +3,8 @@
   package:
     name:
       - python3-psycopg2
+      - netavark
+      - aardvark-dns
     state: present
 
 - name: Create nominatim config directory
@@ -29,6 +31,7 @@
 - name: Create nominatim network
   containers.podman.podman_network:
     name: nominatim
+    disable_dns: False
 
 - name: Install systemd files for nominatim
   template: src={{ item }} dest=/etc/systemd/system/

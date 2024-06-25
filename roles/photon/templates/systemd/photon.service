@@ -5,7 +5,7 @@ StartLimitIntervalSec=10m
 StartLimitBurst=5
 
 [Service]
-Environment=CONTAINER_IMAGE=ghcr.io/leonardehrenfried/photon:0.5.0-2024-03-19T14-36
+Environment=CONTAINER_IMAGE={{ photon_image }}
 Environment=CONTAINER_NAME=photon
 TimeoutStartSec=0
 RestartSec=30

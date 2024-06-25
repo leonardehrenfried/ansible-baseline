@@ -1,5 +1,6 @@
 ---
 pelias_adapter_port: 9100
+photon_image: "ghcr.io/leonardehrenfried/photon:0.5.0-2024-03-19T14-36"
 photon_port: 2322
 photon_data_dir: /var/photon/
 photon_languages:
