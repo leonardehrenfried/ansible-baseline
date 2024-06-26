@@ -8,7 +8,7 @@
       "mbtiles": "/data"
     },
     "serveAllFonts": true,
-    "tileMargin": {{ tilserver_tile_margin }}
+    "tileMargin": {{ tileserver_tile_margin }}
   },
   "styles": {
     "streets": {
