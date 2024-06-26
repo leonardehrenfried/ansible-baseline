@@ -5,6 +5,7 @@ tileserver_port: 5000
 tileserver_cache_port: 5001
 tileserver_allowed_referrers:
   - "{{ tileserver_domain }}"
+tileserver_tile_margin: 50
 tileserver_cache_settings:
   - filetype: png
     server_cache: "1d"
