@@ -1,3 +1,12 @@
 {{ tileserver_domain }} {
+
+# for backwards-compatibility with old Stadnavi instances
+{% for tile_layer in ["streets", "satellite-overlay", "bicycle"] %}
+  handle_path /{{ tile_layer}}/* {
+    rewrite * /styles/{{ tile_layer }}{uri}
+    reverse_proxy localhost:{{ tileserver_cache_port }}
+  }
+{% endfor %}
+
   reverse_proxy /* localhost:{{ tileserver_cache_port }}
 }
