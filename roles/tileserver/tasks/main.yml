@@ -59,6 +59,23 @@
     - tileserver.service
     - tileserver-restart.timer
 
+- name: Install healthcheck systemd files
+  template:
+    src: "systemd/{{ item }}"
+    dest: /etc/systemd/system/
+  with_items:
+    - tileserver-healthcheck.service
+    - tileserver-healthcheck.timer
+
+- name: Start healthcheck
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  with_items:
+    - tileserver-healthcheck.timer
+
 - name: Caddyfile
   ansible.builtin.template:
     src: templates/caddy/tileserver.caddy

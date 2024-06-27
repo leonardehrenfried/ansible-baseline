@@ -3,9 +3,15 @@
   package:
     name:
       - python3-psycopg2
+    state: present
+
+- name: Install aardvark packages
+  package:
+    name:
       - netavark
       - aardvark-dns
     state: present
+  when: ansible_distribution == 'Debian'
 
 - name: Create nominatim config directory
   file:

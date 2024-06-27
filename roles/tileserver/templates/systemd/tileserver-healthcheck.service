@@ -1,0 +1,11 @@
+[Unit]
+Description=Restart tileserver if it hangs
+Requires=tileserver.service
+After=tileserver.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "curl -s -o /dev/null --fail-with-body --retry 5 --retry-max-time 120 -v http://localhost:{{ tileserver_port }} || systemctl restart tileserver"
+
+[Install]
+WantedBy=multi-user.target
