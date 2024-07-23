@@ -1,0 +1,9 @@
+[Unit]
+Description=Restart digitransit
+
+[Timer]
+OnCalendar={{ digitransit_restart_calendar }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target

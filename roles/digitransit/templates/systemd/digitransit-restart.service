@@ -1,0 +1,9 @@
+[Unit]
+Description=Restart digitransit
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl restart digitransit.service
+
+[Install]
+WantedBy=multi-user.target
