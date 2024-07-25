@@ -60,8 +60,9 @@
     content: '%{{ sudo_group }} ALL=(ALL) NOPASSWD: ALL'
     dest: /etc/sudoers.d/passwordless
 
-- name: Create user and add to groups
-  user:
+- name: Create user without password and add to groups
+  when: item.password is not defined
+  ansible.builtin.user:
     name: "{{ item.name }}"
     groups:
       - "{{ sudo_group }}"
@@ -72,12 +73,19 @@
     shell: /bin/bash
   with_items: "{{ users }}"
 
-- name: Remove users
+- name: Create user with password and add to groups
+  when: item.password is defined
   ansible.builtin.user:
-    name: "{{ item }}"
-    state: absent
-    remove: yes
-  with_items: "{{ removed_users }}"
+    name: "{{ item.name }}"
+    password: "{{ item.password }}"
+    groups:
+      - "{{ sudo_group }}"
+      - systemd-journal
+    append: true
+    state: present
+    createhome: true
+    shell: /bin/bash
+  with_items: "{{ users }}"
 
 - name: Set authorized keys from url
   when: item.keys_url is defined
@@ -95,3 +103,9 @@
     key: "{{ lookup('file', item.keys_file) }}"
   with_items: "{{ users }}"
 
+- name: Remove users
+  ansible.builtin.user:
+    name: "{{ item }}"
+    state: absent
+    remove: yes
+  with_items: "{{ removed_users }}"
