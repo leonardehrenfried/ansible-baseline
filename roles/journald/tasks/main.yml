@@ -4,3 +4,6 @@
   with_items:
     - journald.conf
   notify: Restart systemd-journald
+
+- name: Flush handlers
+  meta: flush_handlers
