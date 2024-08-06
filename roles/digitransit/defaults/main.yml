@@ -1,3 +1,4 @@
 ---
 digitransit_port: 8081
 digitransit_image: "docker.io/lehrenfried/digitransit-ui:latest"
+digitransit_otp_timeout: 12000
