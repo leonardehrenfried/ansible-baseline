@@ -1,7 +1,5 @@
 bump-version:
 	./bump-version.sh
-	git commit -am "Bump version"
-	git push
 
 publish: bump-version
 	rm -rf *.tar.gz
