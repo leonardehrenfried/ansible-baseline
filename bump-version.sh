@@ -10,6 +10,6 @@ echo $NEW_VERSION
 
 sed -i "s/^version:.*$/version: ${NEW_VERSION}/" galaxy.yml
 
-git commit -am "Release versin ${NEW_VERSION}"
+git commit -am "Release version ${NEW_VERSION}"
 git tag "${NEW_VERSION}"
 git push
