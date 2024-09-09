@@ -13,6 +13,6 @@ if [ -n "$accesstoken" ]; then
    echo "Sending Matrix message '$1'"
 
    payload=`jq -nc --arg msg "$1" '{msgtype:"m.text", body:$msg}'`
-   curl --silent --output /dev/null -XPOST -d "$payload" "https://$homeserver/_matrix/client/r0/rooms/$room/send/m.room.message?access_token=$accesstoken"
+   curl --max-time 15 --silent --output /dev/null -XPOST -d "$payload" "https://$homeserver/_matrix/client/r0/rooms/$room/send/m.room.message?access_token=$accesstoken"
 fi
 
