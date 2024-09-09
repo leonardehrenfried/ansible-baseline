@@ -21,7 +21,6 @@ ExecStart=podman run -i --rm --name %N \
  -e GEOCODING_BASE_URL={{ digitransit_geocoder_baseurl }} \
  -e OTP_URL="https://{{ digitransit_otp_domain }}/otp/routers/default/" \
  -e API_URL="https://{{ digitransit_otp_domain }}" \
- -e OTP_TIMEOUT={{ digitransit_otp_timeout }} \
  {{ digitransit_image }}
 
 ExecStop=podman stop --ignore %N
