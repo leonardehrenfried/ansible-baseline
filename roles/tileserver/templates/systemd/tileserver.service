@@ -2,7 +2,7 @@
 Description=Tileserver
 
 [Service]
-Environment=CONTAINER_IMAGE=docker.io/maptiler/tileserver-gl:v4.11.1
+Environment=CONTAINER_IMAGE=docker.io/maptiler/tileserver-gl:v5.0.0
 Environment=CONTAINER_NAME=tileserver
 Environment=MEM_LIMIT=8192m
 TimeoutStartSec=0
