@@ -1,4 +1,5 @@
 ---
+tileserver_version: "v5.0.0"
 tileserver_work_dir: "/var/tileserver/"
 tileserver_cache_dir: "{{ tileserver_work_dir }}/cache/"
 tileserver_port: 5000
