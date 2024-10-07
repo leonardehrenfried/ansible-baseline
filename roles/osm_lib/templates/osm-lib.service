@@ -1,0 +1,20 @@
+[Unit]
+Description=Grafana on podman
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=osm-lib
+WorkingDirectory={{ osm_lib_working_directory }}
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=no
+TimeoutStopSec=70
+
+ExecStart={{ osm_lib_working_directory }}/osm-lib
+
+ExecStop=-podman stop osm-lib
+ExecStop=-podman rm osm-lib
+
+[Install]
+WantedBy=multi-user.target default.target
+

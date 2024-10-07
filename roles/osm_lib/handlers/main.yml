@@ -1,0 +1,8 @@
+---
+
+- name: Restart osm-lib
+  service:
+    name: osm-lib
+    state: restarted
+    daemon_reload: true
+  listen: "Restart osm-lib"

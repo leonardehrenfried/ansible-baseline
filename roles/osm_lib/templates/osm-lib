@@ -1,0 +1,13 @@
+#! /bin/bash -e
+
+STABLE_OSM_FILE_NAME="planet.osm.pbf"
+DB_DIR="{{osm_lib_working_directory}}/db/"
+
+if [ ! -f ${STABLE_OSM_FILE_NAME} ]; then
+  echo "Planet file not found. Downloading..."
+  aria2c --seed-time=0 https://planet.openstreetmap.org/pbf/planet-latest.osm.pbf.torrent
+  OSM_FILE_NAME=$(ls planet-*.osm.pbf)
+  mv ${OSM_FILE_NAME} ${STABLE_OSM_FILE_NAME}
+fi
+
+podman run --rm -v {{osm_lib_working_directory}}:/data/ ghcr.io/leonardehrenfried/osm-lib:2024-10-06T20-46 /data/db/ --load "/data/${STABLE_OSM_FILE_NAME}"

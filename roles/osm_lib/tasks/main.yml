@@ -1,0 +1,39 @@
+---
+- name: Install base packages
+  when: ansible_distribution == 'CentOS'
+  package:
+    name:
+      - aria2
+    state: present
+
+- name: Create user osm-lib
+  user:
+    name: osm-lib
+    create_home: True
+    shell: /bin/bash
+    state: present
+
+- name: Create work directory
+  ansible.builtin.file:
+    path: "{{ osm_lib_working_directory }}"
+    state: directory
+    owner: osm-lib
+    group: osm-lib
+
+- name: Copy script
+  template:
+    src: osm-lib
+    dest: "{{ osm_lib_working_directory }}/"
+    mode: "775"
+    owner: osm-lib
+    group: osm-lib
+  notify: Restart osm-lib
+
+- name: Install systemd files
+  template:
+    src: "{{ item }}"
+    dest: /etc/systemd/system/
+  with_items:
+    - osm-lib.service
+  notify: Restart osm-lib
+

@@ -1,0 +1,3 @@
+---
+osm_lib_port: 2200
+osm_lib_working_directory: "/var/osm-lib/"
