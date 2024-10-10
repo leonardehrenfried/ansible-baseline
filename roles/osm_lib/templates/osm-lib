@@ -3,7 +3,7 @@
 CONTAINER_IMAGE="ghcr.io/leonardehrenfried/osm-lib:2024-10-06T20-53"
 
 STABLE_OSM_FILE_NAME="planet.osm.pbf"
-DB_DIR="{{osm_lib_working_directory}}/db/"
+DB_FILE="{{osm_lib_working_directory}}db"
 
 if [ ! -f ${STABLE_OSM_FILE_NAME} ]; then
   echo "Planet file not found. Downloading..."
@@ -12,8 +12,9 @@ if [ ! -f ${STABLE_OSM_FILE_NAME} ]; then
   mv ${OSM_FILE_NAME} ${STABLE_OSM_FILE_NAME}
 fi
 
-if [ ! -d ${DB_DIR} ]; then
-  podman run --rm --name osm-lib-importer -e JAVA_TOOL_OPTIONS="-Xmx30G -XX:MaxDirectMemorySize=30g -XX:+UseLargePages" -v {{osm_lib_working_directory}}:/data/ ${CONTAINER_IMAGE} /data/db/ --load "/data/${STABLE_OSM_FILE_NAME}"
+if [ ! -f "$DB_FILE" ]; then
+  echo "Database file ${DB_FILE} doesn't exist, starting import"
+  podman run --rm --name osm-lib-importer -e JAVA_TOOL_OPTIONS="-Xmx30G -XX:MaxDirectMemorySize=30g -XX:+UseLargePages" -v {{osm_lib_working_directory}}:/data/ ${CONTAINER_IMAGE} /data/db --load "/data/${STABLE_OSM_FILE_NAME}"
 fi
 
-podman run --rm -i --name osm-lib-server -v {{osm_lib_working_directory}}:/data/ ${CONTAINER_IMAGE} /data/db/
+podman run --rm -i --name osm-lib-server -p {{ osm_lib_port}}:9002 -v {{osm_lib_working_directory}}:/data/ ${CONTAINER_IMAGE} /data/db

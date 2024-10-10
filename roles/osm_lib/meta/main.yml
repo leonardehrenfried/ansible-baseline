@@ -3,3 +3,4 @@ collections:
 
 dependencies:
   - leonardehrenfried.baseline.podman
+  - leonardehrenfried.baseline.caddyfile

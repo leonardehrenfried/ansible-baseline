@@ -1,0 +1,3 @@
+{{ osm_lib_domain }} {
+  reverse_proxy /* localhost:{{ osm_lib_port }}
+}
