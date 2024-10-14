@@ -1,6 +1,6 @@
 #! /bin/bash -e
 
-CONTAINER_IMAGE="ghcr.io/leonardehrenfried/osm-lib:2024-10-14T15-23"
+CONTAINER_IMAGE="ghcr.io/leonardehrenfried/osm-lib:2024-10-14T19-39"
 
 STABLE_OSM_FILE_NAME="extract.osm.pbf"
 DB_FILE="{{osm_lib_working_directory}}db"
@@ -17,4 +17,4 @@ if [ ! -f "$DB_FILE" ]; then
   podman run --rm --name osm-lib-importer -e JAVA_TOOL_OPTIONS="-Xmx30G -XX:MaxDirectMemorySize=30g -XX:+UseLargePages" -v {{osm_lib_working_directory}}:/data/ ${CONTAINER_IMAGE} /data/db --load "/data/${STABLE_OSM_FILE_NAME}" --log-driver=none
 fi
 
-podman run --rm -i --name osm-lib-server -p {{ osm_lib_port}}:9002 -v {{osm_lib_working_directory}}:/data/ ${CONTAINER_IMAGE} /data/db
+podman run --rm -i --name osm-lib-server -p {{ osm_lib_port}}:9002 -v {{osm_lib_working_directory}}:/data/ ${CONTAINER_IMAGE} /data/db --log-driver=none
