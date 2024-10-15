@@ -25,11 +25,10 @@
 
 - name: Install osmium
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-  ansible.builtin.pip:
-    name: "{{ item }}"
-  with_items:
-    - osmium-tool
-    - pyosmium
+  package:
+    name:
+      - osmium-tool
+      - pyosmium
 
 - name: Create user otp
   user:
