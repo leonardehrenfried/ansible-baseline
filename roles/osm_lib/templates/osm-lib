@@ -1,6 +1,6 @@
 #! /bin/bash -e
 
-CONTAINER_IMAGE="ghcr.io/leonardehrenfried/osm-lib:2024-11-13T11-01"
+CONTAINER_IMAGE="ghcr.io/leonardehrenfried/osm-lib:2024-11-14T09-47"
 
 STABLE_OSM_FILE_NAME="extract.osm.pbf"
 DB_FILE="{{osm_lib_working_directory}}db"
