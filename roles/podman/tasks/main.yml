@@ -6,6 +6,7 @@
     name:
       - dbus-user-session
       - uidmap
+      - catatonit
 
 - name: Install packages
   ansible.builtin.package:
