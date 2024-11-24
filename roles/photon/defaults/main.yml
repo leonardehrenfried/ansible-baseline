@@ -8,3 +8,5 @@ photon_languages:
   - en
   - fr
   - pl
+
+photon_enable_updates: true

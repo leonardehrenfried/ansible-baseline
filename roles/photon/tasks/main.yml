@@ -27,8 +27,27 @@
   systemd: state=started name="{{ item }}" enabled=yes daemon_reload=yes
   with_items:
     - photon.service
-    - photon-update.timer
     - photon-pelias-adapter.service
+
+- name: Disable updates
+  systemd:
+    state: stopped
+    name: "{{ item }}"
+    enabled: false
+    daemon_reload: yes
+  with_items:
+    - photon-update.timer
+  when: not photon_enable_updates
+
+- name: Enable updates
+  systemd:
+    state: started
+    name: "{{ item }}"
+    enabled: false
+    daemon_reload: yes
+  with_items:
+    - photon-update.timer
+  when: photon_enable_updates
 
 - name: Caddyfile
   ansible.builtin.template:
