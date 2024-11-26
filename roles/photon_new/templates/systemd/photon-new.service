@@ -5,8 +5,8 @@ StartLimitIntervalSec=10m
 StartLimitBurst=5
 
 [Service]
-Environment=CONTAINER_IMAGE={{ photon_image }}
-Environment=CONTAINER_NAME=photon
+Environment=CONTAINER_IMAGE={{ photon_new_image }}
+Environment=CONTAINER_NAME=photon-new
 TimeoutStartSec=0
 RestartSec=30
 
@@ -21,8 +21,8 @@ ExecStartPre=-podman rm ${CONTAINER_NAME}
 ExecStart=podman run --rm --name ${CONTAINER_NAME} \
     --log-driver=journald \
     --network {{ nominatim_podman_network }} \
-    -v {{ photon_volume_name }}:/photon/photon_data:Z \
-    -p {{ photon_port }}:2322 \
+    -v {{ photon_new_volume_name }}:/photon/photon_data:Z \
+    -p {{ photon_new_port }}:2322 \
     -e NOMINATIM_DB_HOST \
     -e NOMINATIM_DB_PASSWORD \
     -e PHOTON_LANGUAGES={{ photon_languages|join(",")}} \

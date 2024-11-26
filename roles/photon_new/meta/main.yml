@@ -1,0 +1,5 @@
+---
+dependencies:
+  - role: leonardehrenfried.baseline.podman
+  - role: leonardehrenfried.baseline.nominatim
+  - role: leonardehrenfried.baseline.caddyfile

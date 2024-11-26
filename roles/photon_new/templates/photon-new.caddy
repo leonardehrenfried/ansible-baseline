@@ -1,0 +1,10 @@
+{{ photon_new_domain }} {
+  # block nominatim update from the outside world
+	@blocked {
+    path /nominatim-update*
+  }
+  respond @blocked 403
+
+  # proxy the rest to photon
+  reverse_proxy /* localhost:{{ photon_new_port }}
+}

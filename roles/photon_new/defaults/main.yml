@@ -1,0 +1,11 @@
+---
+photon_new_image: "ghcr.io/leonardehrenfried/photon:0.6.0-2024-11-25T14-28"
+photon_new_port: 2323
+photon_data_dir: /var/photon/
+photon_languages:
+  - de
+  - en
+  - fr
+  - pl
+
+photon_new_volume_name: "photon-data-2023-11-25"

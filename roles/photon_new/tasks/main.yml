@@ -1,0 +1,27 @@
+---
+- name: Install base packages
+  package:
+    name:
+      - curl
+    state: present
+
+- name: Install systemd files
+  template:
+    src: systemd/{{ item }}
+    dest: /etc/systemd/system/
+  with_items:
+    - photon-new.service
+
+- name: Start services
+  systemd: state=started name="{{ item }}" enabled=yes daemon_reload=yes
+  with_items:
+    - photon-new.service
+
+- name: Caddyfile
+  ansible.builtin.template:
+    src: photon-new.caddy
+    dest: /etc/caddy/
+    owner: caddy
+    group: caddy
+    mode: 0660
+  notify: Restart caddy
