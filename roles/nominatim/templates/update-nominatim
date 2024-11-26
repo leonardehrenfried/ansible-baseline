@@ -1,3 +1,15 @@
 #! /bin/bash -e
 
-podman exec -i nominatim sudo -u nominatim nominatim replication --project-dir /nominatim --once --no-index
+podman exec -i nominatim sudo -u nominatim nominatim replication --project-dir /nominatim --once
+
+MATCH_URL=https://data.mfdz.de/mfdz/delfi_osm_matches.csv.gz
+OUTPUT_FILE=ifopt_osm_matches.csv.gz
+
+curl -o ${OUTPUT_FILE} ${MATCH_URL}
+echo "Downloaded IFOPT matches to ${OUTPUT_FILE}"
+
+echo "Re-adding IFOPTs"
+echo "...finished"
+./nominatim_add_ifopt.py --username nominatim --host localhost --port 5432 --password {{ nominatim_db_password }} ${OUTPUT_FILE}
+
+podman exec -i nominatim sudo -u nominatim nominatim index

@@ -2,7 +2,7 @@
 - name: Install base packages
   package:
     name:
-      - python3-psycopg2
+      - python3-psycopg
     state: present
 
 - name: Install aardvark packages
@@ -33,6 +33,7 @@
   with_items:
     - update-nominatim
     - import-extratags.style
+    - nominatim_add_ifopt.py
 
 - name: Create nominatim network
   containers.podman.podman_network:
