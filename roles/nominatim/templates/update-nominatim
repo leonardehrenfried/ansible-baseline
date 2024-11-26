@@ -9,7 +9,7 @@ curl -o ${OUTPUT_FILE} ${MATCH_URL}
 echo "Downloaded IFOPT matches to ${OUTPUT_FILE}"
 
 echo "Re-adding IFOPTs"
-echo "...finished"
 ./nominatim_add_ifopt.py --username nominatim --host localhost --port 5432 --password {{ nominatim_db_password }} ${OUTPUT_FILE}
+echo "...finished"
 
 podman exec -i nominatim sudo -u nominatim nominatim index
