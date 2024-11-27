@@ -12,4 +12,4 @@ echo "Re-adding IFOPTs"
 ./nominatim_add_ifopt.py --username nominatim --host localhost --port 5432 --password {{ nominatim_db_password }} ${OUTPUT_FILE}
 echo "...finished"
 
-podman exec -i nominatim sudo -u nominatim sh -c "cd /nominatim && nominatim index"
+podman exec -i nominatim sudo -u nominatim nominatim --project-dir /nominatim index
