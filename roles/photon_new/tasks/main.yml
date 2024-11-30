@@ -12,10 +12,25 @@
   with_items:
     - photon-new.service
 
-- name: Start services
-  systemd: state=started name="{{ item }}" enabled=yes daemon_reload=yes
+- name: Disable service
+  systemd:
+    state: stopped
+    name: "{{ item }}"
+    enabled: false
+    daemon_reload: yes
   with_items:
     - photon-new.service
+  when: not photon_new_enabled
+
+- name: Enable service
+  systemd:
+    state: started
+    name: "{{ item }}"
+    enabled: true
+    daemon_reload: yes
+  with_items:
+    - photon-new.service
+  when: photon_new_enabled
 
 - name: Caddyfile
   ansible.builtin.template:
