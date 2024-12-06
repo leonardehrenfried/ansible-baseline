@@ -1,0 +1,7 @@
+{{ mqtt_domain }} {
+  @websockets {
+  	header Connection *Upgrade*
+  	header Upgrade websocket
+  }
+  reverse_proxy @websockets localhost:1884
+}

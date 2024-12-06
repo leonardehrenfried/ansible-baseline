@@ -1,0 +1,24 @@
+[Unit]
+Description=Mosquitto
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Restart=always
+# restart after a week in order to reload the TLS certificate
+RuntimeMaxSec=1w
+ExecStart=podman run --name %n --rm \
+    -p 1883:1883 \
+    -p 1884:1884 \
+    -p 8883:8883 \
+    -p 8884:8884 \
+    -v /etc/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf \
+    -v /etc/mosquitto/mosquitto.acl:/mosquitto/config/mosquitto.acl \
+    -v /etc/mosquitto/mosquitto.passwd:/mosquitto/config/mosquitto.passwd \
+    docker.io/eclipse-mosquitto:2.0.15
+
+ExecStop=-podman stop --ignore %n
+ExecStop=-podman rm %n
+
+[Install]
+WantedBy=multi-user.target

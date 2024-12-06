@@ -1,0 +1,12 @@
+---
+- name: Restart mosquitto service
+  service:
+    name: mosquitto
+    state: restarted
+  listen: "Restart mosquitto"
+
+- name: Restart gtfsrt2mqtt service
+  service:
+    name: gtfsrt2mqtt
+    state: restarted
+  listen: "Restart gtfsrt2mqtt"

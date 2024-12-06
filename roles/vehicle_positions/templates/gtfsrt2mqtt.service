@@ -1,0 +1,25 @@
+[Unit]
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Restart=always
+# restart after 4 hours
+RuntimeMaxSec=4h
+ExecStart=podman run --name %n --rm \
+    --network=host \
+    -e MQTT_BROKER_URL=localhost \
+    -e USERNAME=publisher \
+    -e PASSWORD={{ mqtt_publisher_password }} \
+    -e FEED_TYPE=vp \
+    -e FEED_URL="{{ mqtt_vehicle_position_feed }}" \
+    -e FEED_NAME={{ mqtt_feed_id }}\
+    -e INTERVAL=10 \
+    -e OTP_URL=https://{{ mqtt_otp_domain }}/otp/gtfs/v1 \
+    docker.io/hsldevcom/gtfsrthttp2mqtt:prod-2022-04-11T14.29.37-de608e5
+
+ExecStop=-podman stop --ignore %n
+ExecStop=-podman rm %n
+
+[Install]
+WantedBy=multi-user.target
