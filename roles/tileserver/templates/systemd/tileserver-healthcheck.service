@@ -5,7 +5,7 @@ After=tileserver.service
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c "curl -s -o /dev/null --fail-with-body --retry-all-errors 20 -v --retry-max-time 150 http://localhost:{{ tileserver_port }}/styles/streets/8/135/87.png || systemctl restart tileserver"
+ExecStart=/bin/sh -c "curl -s -o /dev/null --fail-with-body --retry 20 -v --retry-max-time 60 http://localhost:{{ tileserver_port }}/styles/streets/8/135/87.png || systemctl restart tileserver"
 
 [Install]
 WantedBy=multi-user.target
