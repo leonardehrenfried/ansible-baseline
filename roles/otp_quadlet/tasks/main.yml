@@ -8,8 +8,9 @@
   with_items:
     - otp.container
   notify: Reload OTP service
+  register: otp
 
-- name: Start timers
+- name: Start service
   systemd:
     name: "{{ item }}"
     state: started
@@ -17,6 +18,7 @@
     daemon_reload: yes
   with_items:
     - otp.service
+  register: otp
 
 - name: Caddyfile
   ansible.builtin.template:
