@@ -23,7 +23,7 @@ LogDriver=journald
 {% if podman_authorized_repos is defined %}
 ExecStartPre=-podman pull --authfile={{ podman_auth_file }} {{ otp_image }}
 {% endif %}
-ExecStartPre=-send-to-matrix "🚆 Starting %n on {{ inventory_hostname }}"
+ExecStartPre=-send-to-matrix "🚆 Starting %n on {{ matrix_hostname }}"
 Restart=on-failure
 
 [Install]

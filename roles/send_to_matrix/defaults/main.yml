@@ -1,3 +1,3 @@
 ---
-matrix_bot_token: ""
 matrix_room_address: "!UXrSFkkJoppiEZEfgC:matrix.org"
+matrix_hostname: "{{ inventory_hostname }}"
