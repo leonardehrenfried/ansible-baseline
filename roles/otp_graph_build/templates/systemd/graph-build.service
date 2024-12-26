@@ -1,9 +1,9 @@
 [Unit]
 Description=Build OTP graph
 
-# Restart once within 1 hour so that intermittent network failures are gracefully handled
-StartLimitIntervalSec=1h
-StartLimitBurst=2
+# Restart once within 2 hour so that intermittent network failures are gracefully handled
+StartLimitIntervalSec=4h
+StartLimitBurst=3
 
 [Service]
 User=otp
@@ -17,7 +17,7 @@ RuntimeMaxSec=3h
 ExecStopPost=systemd-failure-notification "%n"
 
 Restart=on-failure
-RestartSec=3m
+RestartSec=10m
 
 [Install]
 WantedBy=multi-user.target
