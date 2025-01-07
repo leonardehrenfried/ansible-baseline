@@ -31,10 +31,13 @@ To use the script in on an existing Photon export with updates:
 If you want to force all involved stops to be reindexed and reimported into
 Photon, run this scripts with '-i'. This is only necessary in the rare case
 when the Nominatim and Photon database seem to be out of sync for some reason.
+It may also make sense to use, when you want to change the importance
+weights of the bus stop. Simply run the script with '-i' and the adapted
+importance weights and then update Photon. No reimport necessary.
 
 """
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
-from collections import Counter
+from collections import defaultdict
 import csv
 import gzip
 import logging
@@ -67,6 +70,11 @@ def get_parser():
                      help='Database server port')
   group.add_argument('-p', '--password', metavar='PASSWORD',
                      help='Database password')
+  group = parser.add_argument_group('Stop importance')
+  group.add_argument('--importance-baseline', metavar='WEIGHT', default=0.08, type=float,
+                     help='Minimum importance to assign to stops. Set to 0 to disable.')
+  group.add_argument('--importance-serviced', metavar='WEIGHT', default=0.1,
+                     help='Maximum importance factor to add depending on number of serviced lines.')
 
   parser.add_argument('infile', metavar='FILE',
                       help='CSV file with IFOPT data')
@@ -83,9 +91,14 @@ ADDRESS_MAPPING = [('Landkreis', 'county'),
                    ('Ortsteil', 'suburb')]
 # Match types where to just drop the entire line
 MATCH_DROP = ('NO_MATCH_AND_SEEMS_UNSERVED', 'MATCHED_THOUGH_DISTANT')
+# Additional importance for each stop according to mode
+IMPORTANCE_BY_MODE = {
+    'train': 0.005,
+    'ferry': 0.004,
+    'light_rail': 0.003
+}
 
-
-def insert_ifopt(conn, osm_id, ifopt, names, invalidate):
+def insert_ifopt(conn, osm_id, ifopt, names, importance, invalidate):
   """ Add the given IFOPT id to the extratags of the given OSM object.
       When invalidate is set, the status of the OSM object is set to
       needing an update. That forces, for example, a reimport into Photon.
@@ -99,7 +112,9 @@ def insert_ifopt(conn, osm_id, ifopt, names, invalidate):
   osm_obj_id = int(osm_id[1:])
 
   update_sql = """UPDATE placex
-                    SET extratags = coalesce(extratags, ''::hstore) || hstore ('ref:IFOPT', %(ifopt)s), """
+                    SET extratags = coalesce(extratags, ''::hstore) || hstore ('ref:IFOPT', %(ifopt)s),
+                        importance = %(importance)s,
+               """
   if invalidate:
     update_sql += "indexed_status = 2"
   else:
@@ -110,7 +125,8 @@ def insert_ifopt(conn, osm_id, ifopt, names, invalidate):
 
   with conn.cursor() as cur:
     cur.execute(update_sql,
-                {'ifopt': ifopt, 'osm_type': osm_type, 'osm_id': osm_obj_id})
+                {'ifopt': ifopt, 'osm_type': osm_type, 'osm_id': osm_obj_id,
+                 'importance': importance})
     for row in cur:
       osm_names = row[0]
       if osm_names is not None:
@@ -126,11 +142,11 @@ def insert_ifopt(conn, osm_id, ifopt, names, invalidate):
     return True
 
 
-def update_artificial(conn, node_id, names, address, extratags, lon, lat, invalidate):
+def update_artificial(conn, node_id, names, address, extratags, lon, lat, importance, invalidate):
   """ Update an existing artificial node with new information, if necessary.
   """
   with conn.cursor(row_factory=psycopg.rows.dict_row) as cur:
-    cur.execute("""SELECT place_id, name, address, extratags,
+    cur.execute("""SELECT place_id, name, address, extratags, importance,
                               ST_X(geometry) as lon, ST_Y(geometry) as lat
                        FROM placex
                        WHERE osm_type = 'N' and osm_id = %s""",
@@ -138,32 +154,37 @@ def update_artificial(conn, node_id, names, address, extratags, lon, lat, invali
 
     row = cur.fetchone()
 
-    if invalidate or not set(names.items()).issubset(set(row['name'].items())) \
-        or set(row['address'].items()) != set(address.items()) \
-        or row['extratags'].get('ref:IFOPT', '') != extratags['ref:IFOPT'] \
-        or abs(row['lat'] - lat) > 0.000001 or abs(row['lon'] - lon) > 0.000001:
+    update_needs_reindex = invalidate or not set(names.items()).issubset(set(row['name'].items())) \
+                           or set(row['address'].items()) != set(address.items()) \
+                           or row['extratags'].get('ref:IFOPT', '') != extratags['ref:IFOPT'] \
+                           or abs(row['lat'] - lat) > 0.000001 or abs(row['lon'] - lon) > 0.000001
+
+    if update_needs_reindex or abs((row['importance'] or 0.0) - importance) > 0.00001:
       cur.execute("""UPDATE placex
                            SET name = %s, address = %s, extratags = %s,
                                geometry=ST_SetSRID(ST_MakePoint(%s, %s), 4326),
-                               indexed_status = 2
+                               indexed_status = %s,
+                               importance = %s
                            WHERE place_id = %s
                     """,
-                  (names, address, extratags, lon, lat, row['place_id']))
+                  (names, address, extratags, lon, lat,
+                   2 if update_needs_reindex else 0,
+                   importance, row['place_id']))
 
 
 
-def insert_artificial(conn, node_id, names, address, extratags, lon, lat):
+def insert_artificial(conn, node_id, names, address, extratags, lon, lat, importance):
   """ Insert the given CSV row as an artificial node of type
       public_transport=stop into the Nominatim database.
   """
   with conn.cursor() as cur:
     cur.execute("""INSERT INTO placex (place_id, osm_type, osm_id,
-                                           class, type, name, address, extratags,
-                                           geometry)
+                                       class, type, name, address, extratags,
+                                       importance, geometry)
                        VALUES (nextval('seq_place'), 'N', %s,
-                               'public_transport', 'stop', %s, %s, %s,
+                               'public_transport', 'stop', %s, %s, %s, %s,
                                ST_SetSRID(ST_MakePoint(%s, %s), 4326))
-                    """, (node_id, names, address, extratags, lon, lat))
+                    """, (node_id, names, address, extratags, importance, lon, lat))
 
 
 def get_existing_externals(conn):
@@ -178,7 +199,8 @@ def get_existing_externals(conn):
     return {row[1] : row[0] for row in cur}
 
 
-def import_pt(conn, csvfile, invalidate):
+def import_pt(conn, csvfile, invalidate,
+              base_importance=0.0, importance_by_ifopt={}):
   """ Read the given CSV file of PT stops and apply it to the Nominatim
       database behind connection 'conn'. If 'write_update_table' is set, then
       the IDs of changed objects will be written into the update tables of
@@ -200,10 +222,19 @@ def import_pt(conn, csvfile, invalidate):
 
     osm_id = row['osm_id']
     ifopt = row['GlobaleId']
+    numlines = len(row['linien'].split(',')) if row['linien'].strip() else 0
+    if base_importance > 0:
+        importance = base_importance + IMPORTANCE_BY_MODE.get(row['mode'], 0.0)
+        ifopt_parts = ifopt.split(':')
+        if len(ifopt_parts) >= 3:
+          importance += importance_by_ifopt.get(':'.join(ifopt_parts[0:3]), 0.0)
+    else:
+        importance = 0.000001
+
     names = {'name': row['Haltestelle']}
     if row['Haltestelle'] != row['Haltestelle_lang']:
       names['name:alt'] = row['Haltestelle_lang']
-    if osm_id and insert_ifopt(conn, osm_id, ifopt, names, invalidate):
+    if osm_id and insert_ifopt(conn, osm_id, ifopt, names, importance, invalidate):
       osm_matched += 1
       continue
 
@@ -219,12 +250,12 @@ def import_pt(conn, csvfile, invalidate):
 
     if ifopt in extra_ifopts:
       update_artificial(conn, extra_ifopts[ifopt],
-                        names, address, extratags, lon, lat, invalidate)
+                        names, address, extratags, lon, lat, importance, invalidate)
       external_updated += 1
 
     else:
       insert_artificial(conn, current_ext_id,
-                        names, address, extratags, lon, lat)
+                        names, address, extratags, lon, lat, importance)
       current_ext_id += 1
       external_added += 1
 
@@ -240,6 +271,21 @@ def import_pt(conn, csvfile, invalidate):
                   ([extra_ifopts[i] for i in to_delete], ))
     print(f"Deleted external: {len(to_delete)}")
 
+def collect_line_counts(csvfile, max_importance):
+  lines = defaultdict(set)
+  for row in csv.DictReader(csvfile, delimiter=','):
+    if row['linien'].strip():
+      ifopt_parts = row['GlobaleId'].split(':')
+      if len(ifopt_parts) >= 3:
+        lines[':'.join(ifopt_parts[0:3])].update(row['linien'].split(','))
+
+  return {k: min(1.0, len(v)/25) * max_importance for k, v in lines.items()}
+
+def open_file(fname):
+  if fname.endswith('.gz'):
+    return gzip.open(fname, 'rt')
+
+  return open(fname, newline='')
 
 def main():
   parser = get_parser()
@@ -256,13 +302,16 @@ def main():
     info = psycopg.types.TypeInfo.fetch(conn, "hstore")
     psycopg.types.hstore.register_hstore(info, conn)
 
-    if args.infile.endswith('.gz'):
-      ctx = gzip.open(args.infile, 'rt')
+    if args.importance_serviced > 0:
+      with open_file(args.infile) as csvfile:
+        importance_by_ifopt = collect_line_counts(csvfile, args.importance_serviced)
     else:
-      ctx = open(args.infile, newline='')
+        importance_by_ifopt = {}
 
-    with ctx as csvfile:
-      return import_pt(conn, csvfile, args.invalidate)
+    with open_file(args.infile) as csvfile:
+      return import_pt(conn, csvfile, args.invalidate,
+                       base_importance=max(args.importance_baseline, 0.00001),
+                       importance_by_ifopt=importance_by_ifopt)
 
 
 if __name__ == '__main__':
