@@ -90,4 +90,4 @@ mv "${TILEMAKER_OUTPUT_FILE}" "${TILEMAKER_FINAL_OUTPUT_FILE}"
 
 TIMESTAMP=$(osmium fileinfo -g header.option.osmosis_replication_timestamp ${PBF_FILE})
 
-send-to-matrix "🏗️ mbtiles build complete on {{ inventory_hostname }}. OSM data from ${TIMESTAMP}"
+send-to-matrix "🏗️ tilemaker complete on {{ inventory_hostname }}. OSM data from ${TIMESTAMP}"
