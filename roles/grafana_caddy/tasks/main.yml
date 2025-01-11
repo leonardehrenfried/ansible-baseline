@@ -1,0 +1,9 @@
+---
+- name: Caddyfile
+  ansible.builtin.template:
+    src: templates/grafana.caddy
+    dest: /etc/caddy/
+    owner: caddy
+    group: caddy
+    mode: 0660
+  notify: Restart caddy
