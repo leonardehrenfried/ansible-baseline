@@ -1,0 +1,23 @@
+---
+- name: Install backupd script
+  template:
+    src: "{{ item }}"
+    dest: /usr/local/bin/
+    mode: +x
+  with_items:
+    - backup-grafana-db
+
+- name: Install systemd files for grafana updates
+  template: src={{ item }} dest=/etc/systemd/system/
+  with_items:
+    - backup-grafana-db.service
+    - backup-grafana-db.timer
+
+- name: Start timers
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  with_items:
+    - backup-grafana-db.timer
