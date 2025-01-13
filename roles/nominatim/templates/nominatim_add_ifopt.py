@@ -98,7 +98,7 @@ IMPORTANCE_BY_MODE = {
     'light_rail': 0.003
 }
 
-def insert_ifopt(conn, osm_id, ifopt, names, importance, invalidate):
+def insert_ifopt(conn, osm_id, ifopt, names, wp_title, invalidate):
   """ Add the given IFOPT id to the extratags of the given OSM object.
       When invalidate is set, the status of the OSM object is set to
       needing an update. That forces, for example, a reimport into Photon.
@@ -112,8 +112,9 @@ def insert_ifopt(conn, osm_id, ifopt, names, importance, invalidate):
   osm_obj_id = int(osm_id[1:])
 
   update_sql = """UPDATE placex
-                    SET extratags = coalesce(extratags, ''::hstore) || hstore ('ref:IFOPT', %(ifopt)s),
-                        importance = %(importance)s,
+                    SET extratags = coalesce(extratags, ''::hstore) || hstore ('ref:IFOPT', %(ifopt)s)
+                                    || CASE WHEN extratags ? 'wikipedia' and not extratags->'wikipedia' LIKE 'de:IFOPT_'
+                                            THEN ''::hstore ELSE hstore('wikipedia', %(wp_title)s) END,
                """
   if invalidate:
     update_sql += "indexed_status = 2"
@@ -126,7 +127,7 @@ def insert_ifopt(conn, osm_id, ifopt, names, importance, invalidate):
   with conn.cursor() as cur:
     cur.execute(update_sql,
                 {'ifopt': ifopt, 'osm_type': osm_type, 'osm_id': osm_obj_id,
-                 'importance': importance})
+                 'wp_title': wp_title})
     for row in cur:
       osm_names = row[0]
       if osm_names is not None:
@@ -142,11 +143,11 @@ def insert_ifopt(conn, osm_id, ifopt, names, importance, invalidate):
     return True
 
 
-def update_artificial(conn, node_id, names, address, extratags, lon, lat, importance, invalidate):
+def update_artificial(conn, node_id, names, address, extratags, lon, lat, invalidate):
   """ Update an existing artificial node with new information, if necessary.
   """
   with conn.cursor(row_factory=psycopg.rows.dict_row) as cur:
-    cur.execute("""SELECT place_id, name, address, extratags, importance,
+    cur.execute("""SELECT place_id, name, address, extratags,
                               ST_X(geometry) as lon, ST_Y(geometry) as lat
                        FROM placex
                        WHERE osm_type = 'N' and osm_id = %s""",
@@ -159,32 +160,29 @@ def update_artificial(conn, node_id, names, address, extratags, lon, lat, import
                            or row['extratags'].get('ref:IFOPT', '') != extratags['ref:IFOPT'] \
                            or abs(row['lat'] - lat) > 0.000001 or abs(row['lon'] - lon) > 0.000001
 
-    if update_needs_reindex or abs((row['importance'] or 0.0) - importance) > 0.00001:
+    if update_needs_reindex:
       cur.execute("""UPDATE placex
                            SET name = %s, address = %s, extratags = %s,
                                geometry=ST_SetSRID(ST_MakePoint(%s, %s), 4326),
-                               indexed_status = %s,
-                               importance = %s
+                               indexed_status = 2
                            WHERE place_id = %s
                     """,
-                  (names, address, extratags, lon, lat,
-                   2 if update_needs_reindex else 0,
-                   importance, row['place_id']))
+                  (names, address, extratags, lon, lat, row['place_id']))
 
 
 
-def insert_artificial(conn, node_id, names, address, extratags, lon, lat, importance):
+def insert_artificial(conn, node_id, names, address, extratags, lon, lat):
   """ Insert the given CSV row as an artificial node of type
       public_transport=stop into the Nominatim database.
   """
   with conn.cursor() as cur:
     cur.execute("""INSERT INTO placex (place_id, osm_type, osm_id,
                                        class, type, name, address, extratags,
-                                       importance, geometry)
+                                       geometry)
                        VALUES (nextval('seq_place'), 'N', %s,
-                               'public_transport', 'stop', %s, %s, %s, %s,
+                               'public_transport', 'stop', %s, %s, %s,
                                ST_SetSRID(ST_MakePoint(%s, %s), 4326))
-                    """, (node_id, names, address, extratags, importance, lon, lat))
+                    """, (node_id, names, address, extratags, lon, lat))
 
 
 def get_existing_externals(conn):
@@ -199,8 +197,7 @@ def get_existing_externals(conn):
     return {row[1] : row[0] for row in cur}
 
 
-def import_pt(conn, csvfile, invalidate,
-              base_importance=0.0, importance_by_ifopt={}):
+def import_pt(conn, csvfile, invalidate):
   """ Read the given CSV file of PT stops and apply it to the Nominatim
       database behind connection 'conn'. If 'write_update_table' is set, then
       the IDs of changed objects will be written into the update tables of
@@ -222,19 +219,17 @@ def import_pt(conn, csvfile, invalidate,
 
     osm_id = row['osm_id']
     ifopt = row['GlobaleId']
-    numlines = len(row['linien'].split(',')) if row['linien'].strip() else 0
-    if base_importance > 0:
-        importance = base_importance + IMPORTANCE_BY_MODE.get(row['mode'], 0.0)
-        ifopt_parts = ifopt.split(':')
-        if len(ifopt_parts) >= 3:
-          importance += importance_by_ifopt.get(':'.join(ifopt_parts[0:3]), 0.0)
+    ifopt_parts = ifopt.split(':')
+    if len(ifopt_parts) >= 3:
+      wp_title = 'de:IFOPT_' + ':'.join(ifopt_parts[:3])
     else:
-        importance = 0.000001
+      wp_title = ''
+    numlines = len(row['linien'].split(',')) if row['linien'].strip() else 0
 
     names = {'name': row['Haltestelle']}
     if row['Haltestelle'] != row['Haltestelle_lang']:
       names['name:alt'] = row['Haltestelle_lang']
-    if osm_id and insert_ifopt(conn, osm_id, ifopt, names, importance, invalidate):
+    if osm_id and insert_ifopt(conn, osm_id, ifopt, names, wp_title, invalidate):
       osm_matched += 1
       continue
 
@@ -247,15 +242,17 @@ def import_pt(conn, csvfile, invalidate,
     address = {addr_type: row[row_name]
                for row_name, addr_type in ADDRESS_MAPPING if row.get(row_name)}
     extratags = {'ref:IFOPT' : ifopt}
+    if wp_title:
+        extratags['wikipedia'] = wp_title
 
     if ifopt in extra_ifopts:
       update_artificial(conn, extra_ifopts[ifopt],
-                        names, address, extratags, lon, lat, importance, invalidate)
+                        names, address, extratags, lon, lat, invalidate)
       external_updated += 1
 
     else:
       insert_artificial(conn, current_ext_id,
-                        names, address, extratags, lon, lat, importance)
+                        names, address, extratags, lon, lat)
       current_ext_id += 1
       external_added += 1
 
@@ -271,15 +268,44 @@ def import_pt(conn, csvfile, invalidate,
                   ([extra_ifopts[i] for i in to_delete], ))
     print(f"Deleted external: {len(to_delete)}")
 
-def collect_line_counts(csvfile, max_importance):
+def write_line_counts(conn, csvfile, max_serviced_importance, base_importance):
   lines = defaultdict(set)
+  modes = defaultdict(set)
   for row in csv.DictReader(csvfile, delimiter=','):
     if row['linien'].strip():
       ifopt_parts = row['GlobaleId'].split(':')
       if len(ifopt_parts) >= 3:
-        lines[':'.join(ifopt_parts[0:3])].update(row['linien'].split(','))
+        key = ':'.join(ifopt_parts[0:3])
+        lines[key].update(row['linien'].split(','))
+        if row['mode']:
+          modes[key].add(row['mode'])
 
-  return {k: min(1.0, len(v)/25) * max_importance for k, v in lines.items()}
+  with conn.cursor() as cur:
+    cur.execute("SELECT count(*) FROM pg_tables WHERE tablename = 'wikimedia_importance'")
+    if cur.fetchone()[0] > 0:
+      tablename = 'wikimedia_importance'
+    else:
+      tablename = 'wikipedia_article'
+
+  for ifopt, linelist in lines.items():
+    importance = base_importance
+    # importance by number of lines
+    importance += min(1.0, len(linelist)/25) * max_serviced_importance
+    # importance by mode (use maximum)
+    if ifopt in modes:
+      importance += max(IMPORTANCE_BY_MODE.get(m, 0.0) for m in modes[ifopt])
+
+    with conn.cursor() as cur:
+      title = f"IFOPT_{ifopt}"
+      cur.execute(f'SELECT importance FROM {tablename} WHERE title = %s',
+                  (title, ))
+      if cur.rowcount < 1:
+        cur.execute(f"""INSERT INTO {tablename}(language, title, importance)
+                       VALUES (%s, %s, %s)""",
+                    ('de', title, importance))
+      elif abs(cur.fetchone()[0] - importance) > 0.00001:
+        cur.execute(f'UPDATE {tablename} SET importance = %s WHERE title = %s',
+                    (importance, title))
 
 def open_file(fname):
   if fname.endswith('.gz'):
@@ -302,16 +328,12 @@ def main():
     info = psycopg.types.TypeInfo.fetch(conn, "hstore")
     psycopg.types.hstore.register_hstore(info, conn)
 
-    if args.importance_serviced > 0:
+    if args.importance_baseline > 0:
       with open_file(args.infile) as csvfile:
-        importance_by_ifopt = collect_line_counts(csvfile, args.importance_serviced)
-    else:
-        importance_by_ifopt = {}
+        write_line_counts(conn, csvfile, args.importance_serviced, args.importance_baseline)
 
     with open_file(args.infile) as csvfile:
-      return import_pt(conn, csvfile, args.invalidate,
-                       base_importance=max(args.importance_baseline, 0.00001),
-                       importance_by_ifopt=importance_by_ifopt)
+      return import_pt(conn, csvfile, args.invalidate)
 
 
 if __name__ == '__main__':
