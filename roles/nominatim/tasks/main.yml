@@ -2,7 +2,7 @@
 - name: Install base packages
   package:
     name:
-      - python3-psycopg
+      - python3-psycopg2
     state: present
 
 - name: Install aardvark packages
