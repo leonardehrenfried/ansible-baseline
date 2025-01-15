@@ -47,6 +47,13 @@
         ]
       }
     }
+{% for style_name in tileserver_extra_styles %}
+    ,
+    "{{ style_name }}": {
+      "style": "{{ style_name }}.json",
+      "serve_data": true
+    }
+{% endfor %}
   },
   "data": {
     "v3": {

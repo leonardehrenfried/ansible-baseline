@@ -14,3 +14,6 @@ tileserver_cache_settings:
   - filetype: pbf
     server_cache: "15m"
     browser_cache: 3600
+# extra styles to be deployed
+# place in ./templates/tileserver/foo.json
+tileserver_extra_styles: []

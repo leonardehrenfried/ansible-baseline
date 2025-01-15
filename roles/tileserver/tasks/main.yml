@@ -39,6 +39,41 @@
     - tileserver-config.json
   notify: Restart tileserver
 
+- name: Install extra layers
+  ansible.builtin.copy:
+    src: "tileserver/{{ item }}/style.json"
+    dest: "{{ tileserver_work_dir }}/{{ item }}.json"
+  with_items: "{{ tileserver_extra_styles }}"
+  notify: Restart tileserver
+
+- name: Copy extra_layer sprites sprite.json
+  ansible.builtin.copy:
+    src: "tileserver/{{ item }}//sprite.json"
+    dest: "{{ tileserver_work_dir }}/sprites/{{ item }}.json"
+  with_items: "{{ tileserver_extra_styles }}"
+  notify: Restart tileserver
+
+- name: Copy extra_layer sprites sprite@2x.json
+  ansible.builtin.copy:
+    src: "tileserver/{{ item }}//sprite@2x.json"
+    dest: "{{ tileserver_work_dir }}/sprites/{{ item }}@2x.json"
+  with_items: "{{ tileserver_extra_styles }}"
+  notify: Restart tileserver
+
+- name: Copy extra_layer sprites sprite.png
+  ansible.builtin.copy:
+    src: "tileserver/{{ item }}//sprite.png"
+    dest: "{{ tileserver_work_dir }}/sprites/{{ item }}.png"
+  with_items: "{{ tileserver_extra_styles }}"
+  notify: Restart tileserver
+
+- name: Copy extra_layer sprites sprite@2x.png
+  ansible.builtin.copy:
+    src: "tileserver/{{ item }}//sprite@2x.png"
+    dest: "{{ tileserver_work_dir }}/sprites/{{ item }}@2x.png"
+  with_items: "{{ tileserver_extra_styles }}"
+  notify: Restart tileserver
+
 - name: Install systemd files
   template:
     src: "systemd/{{ item }}"
