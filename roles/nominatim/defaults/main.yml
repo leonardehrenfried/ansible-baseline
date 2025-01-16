@@ -3,3 +3,4 @@ nominatim_data_dir: /var/nominatim/
 nominatim_podman_network: nominatim
 nominatim_image: "docker.io/mediagis/nominatim:4.5-2024-11-13T11-17"
 nominatim_flatnode_file: true
+nominatim_update_ifopts: false
