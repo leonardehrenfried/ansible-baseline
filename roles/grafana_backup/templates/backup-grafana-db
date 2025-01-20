@@ -4,7 +4,9 @@ d=$(date --iso-8601=date)
 
 file=/var/lib/containers/storage/volumes/grafana-storage/_data/grafana.db
 base_url="https://nextcloud.leonard.io/remote.php/dav/files/grafana-backup/grafana/{{ server_name }}/"
-
-echo "Sending file to off-site storage"
-curl --silent --show-error --fail -X MKCOL -u 'grafana-backup:{{ grafana_backup_password }}' "$base_url"
-curl --silent --show-error --fail -T "${file}" -u 'grafana-backup:{{ grafana_backup_password }}' "$base_url/grafana-${d}.db"
+url="$base_url/grafana-${d}.db"
+echo "Creating folder 'grafana/{{ server_name }}'"
+curl --silent --show-error --fail -X MKCOL -u 'grafana-backup:{{ grafana_backup_password }}' "$base_url" || true
+echo "Sending file to ${url}"
+curl --silent --show-error --fail -T "${file}" -u 'grafana-backup:{{ grafana_backup_password }}' "${url}"
+echo "Backup complete file to Nextcloud"
