@@ -1,7 +1,7 @@
 [Unit]
 Description=Build OTP graph
 
-# Restart once within 2 hour so that intermittent network failures are gracefully handled
+# Restart 3 times within 4 hour so that intermittent failures are gracefully handled
 StartLimitIntervalSec=4h
 StartLimitBurst=3
 
