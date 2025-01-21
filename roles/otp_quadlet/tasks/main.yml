@@ -21,6 +21,7 @@
   register: otp
 
 - name: Caddyfile
+  when: otp_add_caddyfile
   ansible.builtin.template:
     src: templates/otp.caddy
     dest: /etc/caddy/
