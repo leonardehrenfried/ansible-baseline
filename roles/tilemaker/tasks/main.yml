@@ -21,8 +21,23 @@
   with_items:
     - build-mbtiles
     - config-openmaptiles.json
+  notify: Restart tilemaker
+
+- name: Install Lua script
+  template:
+    src: "{{ item }}"
+    dest: "{{ tilemaker_work_dir }}"
+  with_items:
     - process-openmaptiles.lua
   notify: Restart tilemaker
+  when: tilemaker_custom_lua_file is not defined
+
+- name: Install custom Lua script
+  ansible.builtin.copy:
+    src: "{{ tilemaker_custom_lua_file }}"
+    dest: "{{ tilemaker_work_dir }}process-openmaptiles.lua"
+  notify: Restart tilemaker
+  when: tilemaker_custom_lua_file is defined
 
 - name: Copy area.geojson
   template:
