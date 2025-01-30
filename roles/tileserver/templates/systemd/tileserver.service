@@ -2,8 +2,8 @@
 Description=Tileserver
 
 # restart at most 20 times per hour
-StartLimitIntervalSec=1h
-StartLimitBurst=20
+StartLimitIntervalSec=5m
+StartLimitBurst=5
 
 [Service]
 Environment=CONTAINER_IMAGE=docker.io/maptiler/tileserver-gl:{{ tileserver_version}}
