@@ -16,7 +16,7 @@ RestartSec=20
 ExecStartPre=-send-to-matrix "🗺️ Restarting tileserver on {{ inventory_hostname }}"
 ExecStartPre=-podman stop ${CONTAINER_NAME}
 ExecStartPre=-podman rm ${CONTAINER_NAME}
-ExecStartPre=-podman pull ${CONTAINER_IMAGE}
+#ExecStartPre=-podman pull ${CONTAINER_IMAGE}
 
 # rsync makes sure that it's a noop when the files are the same
 # I would have preferred a symlink but that doesn't work with docker volumes
