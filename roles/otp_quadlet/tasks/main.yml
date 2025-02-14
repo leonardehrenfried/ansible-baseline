@@ -19,6 +19,7 @@
   with_items:
     - otp.service
   register: otp
+  ignore_errors: yes
 
 - name: Caddyfile
   when: otp_add_caddyfile
