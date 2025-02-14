@@ -1,4 +1,9 @@
 ---
+
+- name: Start graph build
+  ansible.builtin.shell: |
+    systemctl reset-failed graph-build
+
 - name: Start graph build
   ansible.builtin.systemd:
     state: restarted
