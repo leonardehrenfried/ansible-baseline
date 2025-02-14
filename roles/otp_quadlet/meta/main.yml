@@ -7,4 +7,3 @@ dependencies:
   - role: leonardehrenfried.baseline.podman
   - role: leonardehrenfried.baseline.caddyfile
   - role: leonardehrenfried.baseline.otp_restart
-  - role: leonardehrenfried.baseline.send_to_matrix
