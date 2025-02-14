@@ -1,11 +1,13 @@
 ---
 
-- name: Start graph build
+- name: Reset failure counter for graph-build.service
   ansible.builtin.shell: |
     systemctl reset-failed graph-build
+  listen: Start graph build
 
 - name: Start graph build
   ansible.builtin.systemd:
     state: restarted
     name: graph-build
     daemon_reload: true
+  listen: Start graph build

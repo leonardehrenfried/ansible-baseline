@@ -103,6 +103,12 @@
     key: "{{ lookup('file', item.keys_file) }}"
   with_items: "{{ users }}"
 
+- name: Delete .bashrc file for users
+  ansible.builtin.file:
+    path: "/home/{{ item.name }}/.bashrc"
+    state: absent
+  with_items: "{{ users }}"
+
 - name: Remove users
   ansible.builtin.user:
     name: "{{ item }}"
