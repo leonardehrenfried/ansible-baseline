@@ -7,7 +7,7 @@
     group: root
   with_items:
     - otp.container
-  notify: Reload OTP service
+  notify: Reload systemd daemon
   register: otp
 
 - name: Start service
