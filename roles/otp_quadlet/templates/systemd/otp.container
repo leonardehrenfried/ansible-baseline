@@ -8,6 +8,8 @@ StartLimitBurst=2
 [Container]
 {% if podman_authorized_repos is defined %}
 Pull=never
+{% else %}
+Pull=newer
 {% endif %}
 Environment=JAVA_TOOL_OPTIONS="{{ otp_jvm_opts }}"
 Environment=TZ="{{ timezone }}"
