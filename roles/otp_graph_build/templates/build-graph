@@ -68,8 +68,7 @@ curl ${CURL_OPTS} "{{ item.url }}" -o "{{ item.feed_id}}.gtfs.zip"
 mkdir -p report
 
 # actually build the OTP graph
-podman pull ${IMAGE_NAME}
-podman run \
+podman run --pull=newer \
   -v {{ otp_base_dir }}/${BUILD_DIR}:/var/opentripplanner/:z \
   --name ${CONTAINER_NAME} \
   --rm \
