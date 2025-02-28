@@ -3,7 +3,7 @@
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   ansible.builtin.apt:
     update_cache: True
-    cache_valid_time: 604800
+    cache_valid_time: 21600
 
 - name: Install Centos-specific packages
   when: ansible_distribution == 'CentOS'
