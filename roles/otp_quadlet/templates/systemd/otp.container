@@ -6,13 +6,12 @@ StartLimitIntervalSec=1200
 StartLimitBurst=2
 
 [Container]
-{% if podman_authorized_repos is defined %}
-Pull=never
-{% else %}
-Pull=newer
-{% endif %}
 Environment=JAVA_TOOL_OPTIONS="{{ otp_jvm_opts }}"
 Environment=TZ="{{ timezone }}"
+{% if podman_authorized_repos is defined %}
+Environment=REGISTRY_AUTH_FILE="{{ podman_auth_file }}"
+{% endif %}
+Pull=newer
 Image={{ otp_image }}
 {% if otp_mount_volume %}
 Volume={{ otp_base_dir }}/latest/:/var/opentripplanner:z
@@ -22,9 +21,6 @@ Exec=--load --serve
 LogDriver=journald
 
 [Service]
-{% if podman_authorized_repos is defined %}
-ExecStartPre=-podman pull --authfile={{ podman_auth_file }} {{ otp_image }}
-{% endif %}
 ExecStartPre=-send-to-matrix "🚆 Starting %n on {{ matrix_hostname }}"
 Restart=on-failure
 
