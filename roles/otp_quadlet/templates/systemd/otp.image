@@ -1,0 +1,8 @@
+[Unit]
+Description=Run OTP
+
+[Image]
+{% if podman_authorized_repos is defined %}
+AuthFile={{ podman_auth_file }}
+{% endif %}
+Image={{ otp_image }}

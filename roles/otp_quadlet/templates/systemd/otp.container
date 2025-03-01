@@ -8,11 +8,8 @@ StartLimitBurst=2
 [Container]
 Environment=JAVA_TOOL_OPTIONS="{{ otp_jvm_opts }}"
 Environment=TZ="{{ timezone }}"
-{% if podman_authorized_repos is defined %}
-Environment=REGISTRY_AUTH_FILE="{{ podman_auth_file }}"
-{% endif %}
 Pull=newer
-Image={{ otp_image }}
+Image=otp.image
 {% if otp_mount_volume %}
 Volume={{ otp_base_dir }}/latest/:/var/opentripplanner:z
 {% endif %}
