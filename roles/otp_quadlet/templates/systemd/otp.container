@@ -13,6 +13,12 @@ Pull=newer
 {% endif %}
 Environment=JAVA_TOOL_OPTIONS="{{ otp_jvm_opts }}"
 Environment=TZ="{{ timezone }}"
+
+# Custom environment variables
+{% for key, value in otp_env_vars.items() %}
+Environment={{key}}="{{ value }}"
+{% endfor %}
+
 Image={{ otp_image }}
 {% if otp_mount_volume %}
 Volume={{ otp_base_dir }}/latest/:/var/opentripplanner:z

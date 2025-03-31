@@ -5,5 +5,6 @@ otp_restart_time: "3:00"
 otp_mount_volume: true
 
 otp_jvm_opts: "-Xmx6G"
+otp_env_vars: {}
 
 otp_add_caddyfile: true
