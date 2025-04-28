@@ -3,5 +3,6 @@
     output stdout
     format console
   }
+  email mail@leonard.io
 }
 import *.caddy
