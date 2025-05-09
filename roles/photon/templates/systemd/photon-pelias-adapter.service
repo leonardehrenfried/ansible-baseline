@@ -9,11 +9,12 @@ TimeoutStartSec=0
 Restart=always
 
 Environment=PHOTON_URL=https://{{ photon_domain }}
+Environment=PORT=9100
 
 ExecStartPre=-podman pull ${CONTAINER_IMAGE}
 ExecStartPre=-podman stop ${CONTAINER_NAME}
 ExecStartPre=-podman rm ${CONTAINER_NAME}
-ExecStart=podman run --name ${CONTAINER_NAME} --log-driver=journald -p {{ pelias_adapter_port }}:8080 -e PHOTON_URL ${CONTAINER_IMAGE}
+ExecStart=podman run --name ${CONTAINER_NAME} --network=host --log-driver=journald -p {{ pelias_adapter_port }}:9100 -e PORT -e PHOTON_URL ${CONTAINER_IMAGE}
 
 ExecStop=-podman stop ${CONTAINER_NAME}
 
