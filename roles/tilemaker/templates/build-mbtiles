@@ -72,7 +72,7 @@ rm -f ${TILEMAKER_OUTPUT_FILE}
 podman pull ${IMAGE_NAME}
 
 # coastlines need to be placed into the root folder - not where the OSM pbf is!
-# assume that nodes are ordered sequentially, neeeds osmium renumber
+# assume that nodes are ordered sequentially, needs osmium renumber
 podman run \
   -v {{ tilemaker_work_dir }}:/srv \
   -v {{ tilemaker_work_dir }}/coastline:/coastline \
@@ -83,6 +83,9 @@ podman run \
   --output=/srv/${TILEMAKER_OUTPUT_FILE} \
   --config=/srv/config-openmaptiles.json \
   --process=/srv/process-openmaptiles.lua \
+{% if tilemaker_use_store %}
+  --store=/store.dat \
+{% endif %}
   --compact
 
 # tilemaker doesn't like it when the output file already exists to we move it

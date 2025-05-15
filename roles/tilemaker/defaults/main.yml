@@ -5,3 +5,5 @@ tilemaker_create_extract: true
 tilemaker_check_referential_integrity: true
 # https://boundingbox.klokantech.com/ -> CSV
 tilemaker_bounding_box: "-2.81,41.91,23.52,59.81"
+# instead of keeping everything in RAM, put some intermediate data structure on disk
+tilemaker_use_store: false
