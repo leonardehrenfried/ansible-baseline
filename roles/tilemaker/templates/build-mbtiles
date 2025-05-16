@@ -77,7 +77,7 @@ rm -f ${TILEMAKER_OUTPUT_FILE}
 podman run \
   --pull=newer \
   -v {{ tilemaker_work_dir }}:/srv \
-  -v {{ tilemaker_work_dir }}/coastline:/coastline \
+  -v {{ tilemaker_work_dir }}/coastline:/usr/src/app/coastline \
   --name ${CONTAINER_NAME} \
   --rm \
   --cpu-shares 512 \
