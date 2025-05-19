@@ -8,6 +8,9 @@ Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
 TimeoutStopSec=70
 
+ExecStartPre=-podman stop grafana
+ExecStartPre=-podman rm grafana
+
 ExecStart=podman run \
     --rm -it \
     -p {{ grafana_port }}:3000 \
