@@ -17,3 +17,4 @@ tileserver_cache_settings:
 # extra styles to be deployed
 # place in ./templates/tileserver/foo.json
 tileserver_extra_styles: []
+tileserver_restart_time: "06:00:00"
