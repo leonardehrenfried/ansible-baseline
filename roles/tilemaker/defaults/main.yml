@@ -1,4 +1,5 @@
 ---
+tilemaker_start_time: 04:15:00
 tilemaker_pbf_download_url: http://download.geofabrik.de/europe/germany-latest.osm.pbf
 tilemaker_work_dir: "/var/tilemaker/"
 tilemaker_create_extract: true

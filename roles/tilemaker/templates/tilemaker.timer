@@ -2,7 +2,7 @@
 Description=Rebuild mbtiles every night
 
 [Timer]
-OnCalendar=*-*-* 04:15:00
+OnCalendar=*-*-* {{ tilemaker_start_time }}
 Persistent=true
 
 [Install]
