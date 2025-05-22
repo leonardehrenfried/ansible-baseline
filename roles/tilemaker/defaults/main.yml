@@ -8,3 +8,5 @@ tilemaker_check_referential_integrity: true
 tilemaker_bounding_box: "-2.81,41.91,23.52,59.81"
 # instead of keeping everything in RAM, put some intermediate data structure on disk
 tilemaker_use_store: false
+# should there be a notfication when tilemaker starts
+tilemaker_notify_start: false

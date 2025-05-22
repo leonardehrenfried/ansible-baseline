@@ -23,6 +23,10 @@ EXTRACT_GEOJSON=area.geojson
 podman stop ${CONTAINER_NAME} || true
 podman rm ${CONTAINER_NAME} || true
 
+{% if tilemaker_notify_start %}
+send-to-matrix "🏗️ starting tilemaker on {{ inventory_hostname }}"
+{% endif %}
+
 if [ -f "$PBF_FILE" ]; then
   echo "$PBF_FILE exists. Downloading updates."
   pyosmium-up-to-date -v $PBF_FILE
