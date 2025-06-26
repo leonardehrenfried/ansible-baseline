@@ -17,7 +17,7 @@
   package:
     name:
       - cron-apt
-    state: present
+    state: absent
 
 - name: Install base packages
   package:
