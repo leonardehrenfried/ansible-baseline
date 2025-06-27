@@ -24,7 +24,7 @@ podman stop ${CONTAINER_NAME} || true
 podman rm ${CONTAINER_NAME} || true
 
 {% if tilemaker_notify_start %}
-send-to-matrix "🏗️ starting tilemaker on {{ inventory_hostname }}"
+send-to-matrix "🏗️ Starting tilemaker on {{ inventory_hostname }}"
 {% endif %}
 
 if [ -f "$PBF_FILE" ]; then

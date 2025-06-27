@@ -2,3 +2,8 @@
 - name: Reload systemd daemon
   ansible.builtin.systemd:
     daemon_reload: true
+
+- name: Reset failure counter for otp.service
+  ansible.builtin.shell: |
+    systemctl reset-failed otp.service
+  listen: Reload OTP
