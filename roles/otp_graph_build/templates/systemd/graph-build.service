@@ -3,7 +3,7 @@ Description=Build OTP graph
 
 # Restart 3 times within 4 hour so that intermittent failures are gracefully handled
 StartLimitIntervalSec=4h
-StartLimitBurst=3
+StartLimitBurst=2
 
 [Service]
 User=otp
@@ -17,7 +17,8 @@ RuntimeMaxSec=3h
 ExecStopPost=systemd-failure-notification "%n"
 
 Restart=on-failure
-RestartSec=10m
+# Wait 20m after a failure to restart
+RestartSec=20m
 
 [Install]
 WantedBy=multi-user.target
