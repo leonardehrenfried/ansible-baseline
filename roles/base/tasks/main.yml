@@ -12,13 +12,6 @@
       - epel-release
     state: present
 
-- name: Install Debian/Ubuntu-specific packages
-  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
-  package:
-    name:
-      - cron-apt
-    state: absent
-
 - name: Install base packages
   package:
     name:
