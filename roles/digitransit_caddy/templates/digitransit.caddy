@@ -2,7 +2,7 @@
   reverse_proxy /* localhost:{{ digitransit_port }}
 
 {% if digitransit_ui_user is defined %}
-  basicauth / {
+  basicauth /* {
     {{ digitransit_ui_user }} {{ digitransit_ui_password | password_hash('bcrypt', salt='ZZjxxx7R7p7z65GHj4ih8J' ) }}
   }
 {% endif %}
