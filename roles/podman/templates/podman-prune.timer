@@ -1,8 +1,8 @@
 [Unit]
-Description=Run podman prune daily
+Description=Run podman prune weekly
 
 [Timer]
-OnCalendar=*-*-* 06:30:00
+OnCalendar={{ podman_prune_calendar }}
 Persistent=true
 
 [Install]
