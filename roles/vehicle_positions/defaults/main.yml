@@ -1,2 +1,3 @@
 ---
 vehicle_positions_poll_interval: 5
+gtfsrthttp2mqtt_image: "docker.io/hsldevcom/gtfsrthttp2mqtt:prod-2022-04-11T14.29.37-de608e5"

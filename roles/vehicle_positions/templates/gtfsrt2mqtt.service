@@ -16,7 +16,7 @@ ExecStart=podman run --name %n --rm \
     -e FEED_NAME={{ mqtt_feed_id }}\
     -e INTERVAL={{ vehicle_positions_poll_interval }} \
     -e OTP_URL=https://{{ mqtt_otp_domain }}/otp/gtfs/v1 \
-    docker.io/hsldevcom/gtfsrthttp2mqtt:prod-2022-04-11T14.29.37-de608e5
+    {{ gtfsrthttp2mqtt_image }}
 
 ExecStop=-podman stop --ignore %n
 ExecStop=-podman rm %n
