@@ -6,7 +6,10 @@ Wants=network-online.target
 Restart=always
 # restart after 4 hours
 RuntimeMaxSec=4h
-ExecStop=-podman rm %n
+
+ExecStartPre=-podman stop %n
+ExecStartPre=-podman rm %n
+
 ExecStart=podman run --name %n --rm \
     --network=host \
     -e MQTT_BROKER_URL=localhost \
