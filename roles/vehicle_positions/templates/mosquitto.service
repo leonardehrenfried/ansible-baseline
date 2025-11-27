@@ -9,7 +9,7 @@ Restart=always
 RuntimeMaxSec=1w
 
 ExecStartPre=-podman stop %n
-ExecStartPre=-podman rm %n
+ExecStartPre=-podman rm --force %n
 
 ExecStart=podman run --name %n --rm \
     -p 1883:1883 \

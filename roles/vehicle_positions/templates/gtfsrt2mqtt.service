@@ -8,7 +8,7 @@ Restart=always
 RuntimeMaxSec=4h
 
 ExecStartPre=-podman stop %n
-ExecStartPre=-podman rm %n
+ExecStartPre=-podman rm --force %n
 
 ExecStart=podman run --name %n --rm \
     --network=host \
