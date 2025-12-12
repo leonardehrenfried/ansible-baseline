@@ -1,12 +1,12 @@
 ---
 #- name: APT Key is stored in keyring
-#  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+#  when: ansible_facts["distribution"] == 'Debian' or ansible_facts["distribution"] == 'Ubuntu'
 #  ansible.builtin.apt_key:
 #    url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
 #    keyring: /usr/share/keyrings/caddy-stable-archive-keyring.gpg
 #
 #- name: Caddy repository is enabled
-#  when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+#  when: ansible_facts["distribution"] == 'Debian' or ansible_facts["distribution"] == 'Ubuntu'
 #  register: caddyrepo
 #  ansible.builtin.get_url:
 #    url: https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt

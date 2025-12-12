@@ -11,7 +11,7 @@
       - netavark
       - aardvark-dns
     state: present
-  when: ansible_distribution == 'Debian'
+  when: ansible_facts["distribution"] == 'Debian'
 
 - name: Create nominatim config directory
   file:

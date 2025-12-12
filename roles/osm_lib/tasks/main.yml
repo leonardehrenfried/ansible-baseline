@@ -1,6 +1,6 @@
 ---
 - name: Install base packages
-  when: ansible_distribution == 'CentOS'
+  when: ansible_facts["distribution"] == 'CentOS'
   package:
     name:
       - aria2
