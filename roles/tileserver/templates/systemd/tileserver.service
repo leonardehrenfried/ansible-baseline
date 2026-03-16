@@ -20,7 +20,7 @@ ExecStartPre=-podman rm ${CONTAINER_NAME}
 
 # rsync makes sure that it's a noop when the files are the same
 # I would have preferred a symlink but that doesn't work with docker volumes
-ExecStartPre=-rsync --update {{ tilemaker_work_dir }}/tilemaker-output.mbtiles {{ tileserver_work_dir }}/input.mbtiles
+ExecStartPre=-rsync --update {{ tileserver_mbtiles_path }} {{ tileserver_work_dir }}/input.mbtiles
 
 ExecStart=podman run --rm \
             --name ${CONTAINER_NAME} \
