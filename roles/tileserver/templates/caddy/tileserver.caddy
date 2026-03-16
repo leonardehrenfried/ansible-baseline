@@ -8,5 +8,8 @@
   }
 {% endfor %}
 
+  header {
+    X-Backend-Host "{os.hostname}"
+  }
   reverse_proxy /* localhost:{{ tileserver_cache_port }}
 }
