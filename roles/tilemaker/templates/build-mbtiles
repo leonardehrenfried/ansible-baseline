@@ -70,6 +70,7 @@ if [[ ${PBF_FILE} -nt ${TILEMAKER_INPUT_FILE} ]] || [[ ${EXTRACT_GEOJSON} -nt ${
   osmium renumber ${TILEMAKER_INPUT_FILE} -o ${RENUMBERED}
   mv ${RENUMBERED} ${TILEMAKER_INPUT_FILE}
 {% else %}
+  echo "Renumbering OSM data"
   osmium renumber ${PBF_FILE} -o ${TILEMAKER_INPUT_FILE} --overwrite
 {% endif %}
 fi

@@ -3,7 +3,7 @@ Description=Build mbtiles
 
 # Restart once times within 20 minutes so that an intermittent network failures are gracefully handled
 StartLimitIntervalSec=1200
-StartLimitBurst=1
+StartLimitBurst=3
 
 [Service]
 WorkingDirectory={{ tilemaker_work_dir }}
