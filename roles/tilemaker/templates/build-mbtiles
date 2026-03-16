@@ -99,6 +99,9 @@ podman run \
 # tilemaker doesn't like it when the output file already exists to we move it
 mv "${TILEMAKER_OUTPUT_FILE}" "${TILEMAKER_FINAL_OUTPUT_FILE}"
 
+# make file world-readable
+chmod a+r "${TILEMAKER_FINAL_OUTPUT_FILE}"
+
 TIMESTAMP=$(osmium fileinfo -g header.option.osmosis_replication_timestamp ${PBF_FILE})
 
 send-to-matrix "🏗️ tilemaker complete on {{ inventory_hostname }}. OSM data from ${TIMESTAMP}"
