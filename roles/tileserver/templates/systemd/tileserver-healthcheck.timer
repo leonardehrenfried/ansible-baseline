@@ -2,7 +2,7 @@
 Description=Run tileserver healthcheck
 
 [Timer]
-OnCalendar=minutely
+OnCalendar=*-*-* 0..6,8..23/1:00:00
 Persistent=true
 
 [Install]
