@@ -24,7 +24,7 @@ podman stop ${CONTAINER_NAME} || true
 podman rm ${CONTAINER_NAME} || true
 
 {% if tilemaker_notify_start %}
-send-to-matrix "🏗️ Starting tilemaker on {{ inventory_hostname }}"
+send-to-matrix "🏗️ Starting tilemaker on {{ matrix_hostname }}"
 {% endif %}
 
 if [ -f "$PBF_FILE" ]; then
@@ -104,4 +104,4 @@ chmod a+r "${TILEMAKER_FINAL_OUTPUT_FILE}"
 
 TIMESTAMP=$(osmium fileinfo -g header.option.osmosis_replication_timestamp ${PBF_FILE})
 
-send-to-matrix "🏗️ tilemaker complete on {{ inventory_hostname }}. OSM data from ${TIMESTAMP}"
+send-to-matrix "🏗️ tilemaker complete on {{ matrix_hostname }}. OSM data from ${TIMESTAMP}"

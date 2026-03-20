@@ -13,17 +13,17 @@ TimeoutStartSec=0
 Restart=always
 RestartSec=20
 
-ExecStartPre=-send-to-matrix "🗺️ Restarting tileserver on {{ inventory_hostname }}"
+ExecStartPre=-send-to-matrix "🗺️ Restarting tileserver on {{ matrix_hostname }}"
 ExecStartPre=-podman stop ${CONTAINER_NAME}
 ExecStartPre=-podman rm ${CONTAINER_NAME}
 
 # rsync makes sure that it's a noop when the files are the same
-ExecStartPre=-rsync \
+ExecStartPre=-/bin/sh -c 'rsync \
   --progress \
   --update \
   --stats \
   {{ tileserver_mbtiles_path }} \
-  {{ tileserver_work_dir }}/input.mbtiles
+  {{ tileserver_work_dir }}/input.mbtiles || send-to-matrix "⚠️ rsync failed on {{ matrix_hostname }}"'
 
 ExecStart=podman run --rm \
             --name ${CONTAINER_NAME} \
