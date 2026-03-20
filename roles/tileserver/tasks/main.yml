@@ -111,15 +111,6 @@
   with_items:
     - tileserver-healthcheck.timer
 
-- name: Caddyfile
-  ansible.builtin.template:
-    src: templates/caddy/tileserver.caddy
-    dest: /etc/caddy/
-    owner: caddy
-    group: caddy
-    mode: 0660
-  notify: Restart caddy
-
 - name: Create tile cache dir
   file:
     path: "{{ tileserver_work_dir }}/nginx-cache/"

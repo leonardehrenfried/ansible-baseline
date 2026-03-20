@@ -4,5 +4,7 @@
     format console
   }
   email mail@leonard.io
+  # acme_ca https://acme-staging-v02.api.letsencrypt.org/directory
+  auto_https disable_redirects
 }
 import *.caddy
