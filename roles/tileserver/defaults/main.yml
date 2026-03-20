@@ -17,6 +17,7 @@ tileserver_cache_settings:
 # extra styles to be deployed
 # place in ./templates/tileserver/foo.json
 tileserver_extra_styles: []
+tileserver_extra_sources: []
 tileserver_restart_time: "06:00:00"
 
 tileserver_mbtiles_path: "{{ tilemaker_work_dir }}/tilemaker_output.mbtiles"

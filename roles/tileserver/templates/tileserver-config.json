@@ -59,5 +59,11 @@
     "v3": {
       "mbtiles": "input.mbtiles"
     }
+{% for source in tileserver_extra_sources %}
+    ,
+    "{{ source.name }}": {
+      "mbtiles": "{{ source.path }}"
+    }
+{% endfor %}
   }
 }
