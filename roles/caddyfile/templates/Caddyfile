@@ -4,5 +4,12 @@
     format console
   }
   email mail@leonard.io
+
+{% if caddy_metrics | default(false) %}
+  servers {
+    metrics
+  }
+  admin :2019
+{% endif %}
 }
 import *.caddy
