@@ -1,0 +1,41 @@
+---
+- name: Create Prometheus base directory
+  ansible.builtin.file:
+    path: "{{ prometheus_base_dir }}"
+    state: directory
+    owner: '65534'
+    group: '65534'
+    mode: '0755'
+
+- name: Create Prometheus config directory
+  ansible.builtin.file:
+    path: "{{ prometheus_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy Prometheus config file
+  ansible.builtin.template:
+    src: config/prometheus.yml
+    dest: "{{ prometheus_config_dir }}/prometheus.yml"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart prometheus
+
+- name: Copy Prometheus quadlet container config
+  ansible.builtin.template:
+    src: systemd/prometheus.container
+    dest: /etc/containers/systemd/
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Reload systemd daemon
+
+- name: Start Prometheus service
+  ansible.builtin.systemd:
+    name: prometheus.service
+    state: started
+    enabled: yes
+    daemon_reload: yes

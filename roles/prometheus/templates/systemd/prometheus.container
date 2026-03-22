@@ -1,0 +1,37 @@
+[Unit]
+Description=Prometheus monitoring system
+After=network-online.target
+
+# Restart once within 20 minutes so that an intermittent network failures are gracefully handled
+StartLimitIntervalSec=1200
+StartLimitBurst=2
+
+[Container]
+{% if podman_authorized_repos is defined %}
+Pull=never
+{% else %}
+Pull=newer
+{% endif %}
+
+Image=docker.io/prom/prometheus/{{ prometheus_version }}
+
+# Mount storage volume
+Volume=prometheus-data:/prometheus:z
+
+# Mount config files
+Volume={{ prometheus_config_dir }}:/etc/prometheus:ro,z
+
+# Publish port
+PublishPort={{ prometheus_port }}:9090
+
+# Prometheus command line arguments
+Exec=--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention.time={{ prometheus_retention_time }}
+
+LogDriver=journald
+
+[Service]
+Restart=on-failure
+
+[Install]
+# Start by default on boot
+WantedBy=multi-user.target default.target
