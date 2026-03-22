@@ -1,0 +1,6 @@
+---
+prometheus_port: 9090
+prometheus_version: "v3.10.0"
+prometheus_config_dir: "/etc/prometheus"
+prometheus_retention_time: "15d"
+prometheus_scrape_interval: "15s"
