@@ -2,8 +2,7 @@
 Description=Prometheus monitoring system
 After=network-online.target
 
-# Restart once within 20 minutes so that an intermittent network failures are gracefully handled
-StartLimitIntervalSec=1200
+StartLimitIntervalSec=5m
 StartLimitBurst=2
 
 [Container]
@@ -14,9 +13,6 @@ Volume=prometheus-data:/prometheus:z
 
 # Mount config files
 Volume={{ prometheus_config_dir }}:/etc/prometheus:ro,z
-
-# Publish port
-PublishPort={{ prometheus_port }}:9090
 
 # Use host networking
 Network=host
