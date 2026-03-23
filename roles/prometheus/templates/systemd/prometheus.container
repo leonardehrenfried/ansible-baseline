@@ -7,7 +7,7 @@ StartLimitIntervalSec=1200
 StartLimitBurst=2
 
 [Container]
-Image=docker.io/prom/prometheus/{{ prometheus_version }}
+Image=docker.io/prom/prometheus:{{ prometheus_version }}
 
 # Mount storage volume
 Volume=prometheus-data:/prometheus:z

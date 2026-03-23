@@ -1,12 +1,4 @@
 ---
-- name: Create Prometheus base directory
-  ansible.builtin.file:
-    path: "{{ prometheus_base_dir }}"
-    state: directory
-    owner: '65534'
-    group: '65534'
-    mode: '0755'
-
 - name: Create Prometheus config directory
   ansible.builtin.file:
     path: "{{ prometheus_config_dir }}"
