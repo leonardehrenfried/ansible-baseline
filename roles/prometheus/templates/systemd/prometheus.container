@@ -18,6 +18,9 @@ Volume={{ prometheus_config_dir }}:/etc/prometheus:ro,z
 # Publish port
 PublishPort={{ prometheus_port }}:9090
 
+# Use host networking
+Network=host
+
 # Prometheus command line arguments
 Exec=--config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --storage.tsdb.retention.time={{ prometheus_retention_time }}
 
