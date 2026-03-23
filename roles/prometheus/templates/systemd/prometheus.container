@@ -7,12 +7,6 @@ StartLimitIntervalSec=1200
 StartLimitBurst=2
 
 [Container]
-{% if podman_authorized_repos is defined %}
-Pull=never
-{% else %}
-Pull=newer
-{% endif %}
-
 Image=docker.io/prom/prometheus/{{ prometheus_version }}
 
 # Mount storage volume
