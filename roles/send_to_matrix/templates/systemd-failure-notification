@@ -3,7 +3,7 @@
 # this is utlity script that reads systemd exit code env variables and sends notifications when the job has failed
 
 if [ "$EXIT_STATUS" == "TERM" ] && [ "$SERVICE_RESULT" == "success" ] && [ "$EXIT_CODE" == "killed" ]; then
-  send-to-matrix "⏏️ $1 stopped by user on {{ inventory_hostname }}";
+  send-to-matrix "⏏️ $1 stopped by user on {{ matrix_hostname }}";
 elif [ "$EXIT_STATUS" != "0" ]; then
-  send-to-matrix "⚠️ $1 failed on {{ inventory_hostname }}";
+  send-to-matrix "⚠️ $1 failed on {{ matrix_hostname }}";
 fi
