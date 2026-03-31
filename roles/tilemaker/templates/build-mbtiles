@@ -70,8 +70,13 @@ if [[ ${PBF_FILE} -nt ${TILEMAKER_INPUT_FILE} ]] || [[ ${EXTRACT_GEOJSON} -nt ${
   osmium renumber ${TILEMAKER_INPUT_FILE} -o ${RENUMBERED}
   mv ${RENUMBERED} ${TILEMAKER_INPUT_FILE}
 {% else %}
+  {% if tilemaker_renumber %}
   echo "Renumbering OSM data"
   osmium renumber ${PBF_FILE} -o ${TILEMAKER_INPUT_FILE} --overwrite
+  {% else %}
+  echo "Skipping renumbering, copying ${PBF_FILE}"
+  cp ${PBF_FILE} ${TILEMAKER_INPUT_FILE}
+  {% endif %}
 {% endif %}
 fi
 
@@ -90,11 +95,13 @@ podman run \
   --output=/srv/${TILEMAKER_OUTPUT_FILE} \
   --config=/srv/config-openmaptiles.json \
   --process=/srv/process-openmaptiles.lua \
-  --quiet \
 {% if tilemaker_use_store %}
   --store=/store.dat \
 {% endif %}
-  --compact
+{% if tilemaker_renumber %}
+  --compact \
+{% endif %}
+  --quiet
 
 # tilemaker doesn't like it when the output file already exists to we move it
 mv "${TILEMAKER_OUTPUT_FILE}" "${TILEMAKER_FINAL_OUTPUT_FILE}"
