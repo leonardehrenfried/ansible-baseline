@@ -11,4 +11,4 @@
 - name: Reset failure counter for prometheus
   ansible.builtin.shell: |
     systemctl reset-failed prometheus
-  listen: Restart prometheys
+  listen: Restart prometheus
