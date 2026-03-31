@@ -2,8 +2,8 @@
 
 CURL_OPTS="--location --fail -s --show-error -#"
 
-PBF_DOWNLOAD_URL=https://download.geofabrik.de/europe-latest.osm.pbf
-PBF_FILE=europe.osm.pbf
+PBF_DOWNLOAD_URL={{ tilemaker_pbf_download_url }}
+PBF_FILE=osm.pbf
 RENUMBERED=renumbered.osm.pbf
 TILEMAKER_INPUT_FILE=tilemaker-input.osm.pbf
 

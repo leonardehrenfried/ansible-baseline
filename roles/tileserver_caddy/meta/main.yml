@@ -1,3 +1,4 @@
 ---
 dependencies:
   - role: leonardehrenfried.baseline.tileserver
+  - role: leonardehrenfried.baseline.caddyfile
