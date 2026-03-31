@@ -7,6 +7,8 @@
   ansible.builtin.systemd:
     name: prometheus.service
     state: restarted
+    daemon_reload: yes
+  listen: Restart prometheus
 
 - name: Reset failure counter for prometheus
   ansible.builtin.shell: |
