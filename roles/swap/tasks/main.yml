@@ -6,9 +6,8 @@
     state: present
 
 - name: Create swap file
-  ansible.builtin.command: >
-    fallocate -l {{ swap_size }} /swapfile
-  args:
+  ansible.builtin.command:
+    cmd: fallocate -l {{ swap_size }} /swapfile
     creates: /swapfile
   register: swap_created
 
@@ -23,7 +22,7 @@
 
 - name: Enable the swap file
   ansible.builtin.command: swapon /swapfile
-  register: swap_created
+  when: swap_created.changed
 
 - name: Add swap file to fstab
   ansible.builtin.lineinfile:
