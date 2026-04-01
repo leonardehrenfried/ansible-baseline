@@ -1,0 +1,41 @@
+---
+
+- name: Install util-linux package
+  ansible.builtin.package:
+    name: util-linux
+    state: present
+
+- name: Create swap file
+  ansible.builtin.command: >
+    fallocate -l {{ swap_size }} /swapfile
+  args:
+    creates: /swapfile
+  register: swap_created
+
+- name: Set swap file permissions
+  ansible.builtin.file:
+    path: /swapfile
+    mode: "0600"
+
+- name: Format the file as swap
+  ansible.builtin.command: mkswap /swapfile
+  when: swap_created.changed
+
+- name: Enable the swap file
+  ansible.builtin.command: swapon /swapfile
+  register: swap_created
+
+- name: Add swap file to fstab
+  ansible.builtin.lineinfile:
+    path: /etc/fstab
+    line: "/swapfile none swap sw 0 0"
+    state: present
+
+- name: Check swap status
+  ansible.builtin.command: swapon --show
+  register: swap_status
+  changed_when: false
+
+- name: Display swap status
+  ansible.builtin.debug:
+    var: swap_status.stdout_lines
