@@ -137,3 +137,6 @@
     src: "nginx/tileserver-cache.conf"
     dest: /etc/nginx/sites-enabled/
   notify: "Restart nginx"
+
+- name: Flush handlers
+  meta: flush_handlers
