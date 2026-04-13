@@ -2,7 +2,7 @@
 Description=Run tileserver healthcheck
 
 [Timer]
-OnCalendar={{ tileserver_healthcheck_calendar }}
+OnCalendar=minutely
 Persistent=true
 
 [Install]
