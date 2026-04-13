@@ -8,7 +8,6 @@ StartLimitBurst=5
 [Service]
 Environment=CONTAINER_IMAGE=docker.io/maptiler/tileserver-gl:{{ tileserver_version}}
 Environment=CONTAINER_NAME=tileserver
-Environment=MEM_LIMIT=8192m
 TimeoutStartSec=0
 Restart=always
 RestartSec=20
@@ -28,7 +27,6 @@ ExecStartPre=-/bin/sh -c 'rsync \
 ExecStart=podman run --rm \
             --name ${CONTAINER_NAME} \
             -v {{ tileserver_work_dir }}:/data \
-            --memory="${MEM_LIMIT}" \
             -p {{ tileserver_port }}:8080 ${CONTAINER_IMAGE} \
             -u https://{{ tileserver_domain }} \
             --config tileserver-config.json

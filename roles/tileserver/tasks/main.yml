@@ -1,18 +1,21 @@
 ---
 - name: Create working dir directory
   file:
-    path: "{{ tileserver_work_dir }}"
+    path: "{{ item }}"
     state: directory
     owner: root
     group: root
     mode: 0775
+  with_items:
+      - "{{ tileserver_work_dir }}"
+      - "{{ tileserver_work_dir }}/fonts/"
 
 - name: Download and unzip fonts
   ansible.builtin.unarchive:
-    src: https://github.com/klokantech/klokantech-gl-fonts/archive/refs/tags/v1.0.0.zip
-    dest: "{{ tileserver_work_dir }}"
+    src: https://github.com/openmaptiles/fonts/releases/download/v2.0/v2.0.zip
+    dest: "{{ tileserver_work_dir }}/fonts/"
     remote_src: yes
-    creates: "{{ tileserver_work_dir }}/klokantech-gl-fonts-1.0.0"
+    creates: "{{ tileserver_work_dir }}/fonts/Noto Sans Regular/"
 
 - name: Copy sprites
   ansible.builtin.copy:
@@ -23,12 +26,6 @@
   copy:
     src: unauthorized.png
     dest: /var/www/html/
-
-- name: Symlink fonts
-  ansible.builtin.file:
-    dest: "{{ tileserver_work_dir }}/fonts"
-    src: klokantech-gl-fonts-1.0.0
-    state: link
 
 - name: Install config and script files
   template: src={{ item }} dest={{ tileserver_work_dir }}
@@ -113,11 +110,16 @@
 
 - name: Create tile cache dir
   file:
-    path: "{{ tileserver_work_dir }}/nginx-cache/"
+    path: "{{ tileserver_work_dir }}/cache/"
     state: directory
     owner: root
     group: root
     mode: 0775
+
+- name: Remove old cache dir
+  file:
+    path: "{{ tileserver_work_dir }}/nginx-cache/"
+    state: absent
 
 - name: Install nginx
   package:

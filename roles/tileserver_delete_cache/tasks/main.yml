@@ -1,0 +1,8 @@
+---
+- name: Delete cache dir
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+     - "{{ tileserver_work_dir }}/cache/"
+  notify: "Restart nginx"
