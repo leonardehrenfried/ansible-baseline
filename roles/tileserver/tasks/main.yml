@@ -112,9 +112,6 @@
   file:
     path: "{{ tileserver_work_dir }}/cache/"
     state: directory
-    owner: root
-    group: root
-    mode: 0775
 
 - name: Remove old cache dir
   file:
