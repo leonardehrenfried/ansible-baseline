@@ -3,6 +3,8 @@
   ansible.builtin.service:
     name: tileserver
     state: restarted
+  # Ensures a rolling restart by processing only one host at a time
+  # The next host will only start once this host has passed the health check
   throttle: 1
   listen: "Restart tileserver"
 
