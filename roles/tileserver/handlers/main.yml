@@ -3,6 +3,17 @@
   service:
     name: tileserver
     state: restarted
+  throttle: 1
+  listen: "Restart tileserver"
+
+- name: Check tileserver is back up
+  uri:
+    url: "http://localhost:{{ tileserver_port }}"
+    status_code: 200
+  retries: 30
+  delay: 10
+  throttle: 1
+  listen: "Restart tileserver"
 
 - name: Check nginx conf
   command: "/usr/sbin/nginx -t"
