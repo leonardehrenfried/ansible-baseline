@@ -1,13 +1,13 @@
 ---
 - name: Restart tileserver
-  service:
+  ansible.builtin.service:
     name: tileserver
     state: restarted
   throttle: 1
   listen: "Restart tileserver"
 
 - name: Check tileserver is back up
-  uri:
+  ansible.builtin.uri:
     url: "http://localhost:{{ tileserver_port }}"
     status_code: 200
   retries: 30
@@ -16,13 +16,12 @@
   listen: "Restart tileserver"
 
 - name: Check nginx conf
-  command: "/usr/sbin/nginx -t"
+  ansible.builtin.command: "/usr/sbin/nginx -t"
   become: yes
   listen: "Restart nginx"
 
 - name: Restart nginx service
-  service:
+  ansible.builtin.service:
     name: nginx
     state: restarted
   listen: "Restart nginx"
-
