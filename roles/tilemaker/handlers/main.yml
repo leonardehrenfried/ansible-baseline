@@ -1,5 +1,11 @@
 ---
-- name: Restart tilemaker
+- name: Reset failure counter for otp.service
+  ansible.builtin.shell: |
+    systemctl reset-failed tilemaker.service
+  listen: Restart tilemaker
+
+- name: Restart tilemaker service
   service:
     name: tilemaker
     state: restarted
+  listen: Restart tilemaker
