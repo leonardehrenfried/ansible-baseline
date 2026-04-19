@@ -2,12 +2,13 @@
 Description=Build mbtiles
 
 # Restart once times within 20 minutes so that an intermittent network failures are gracefully handled
-StartLimitIntervalSec=1200
+StartLimitIntervalSec=1m
 StartLimitBurst=3
 
 [Service]
 WorkingDirectory={{ tilemaker_work_dir }}
 ExecStart={{ tilemaker_work_dir }}/build-mbtiles
+RestartSec=10m
 Restart=on-failure
 
 ExecStopPost=-podman stop tilemaker
