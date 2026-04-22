@@ -8,6 +8,7 @@ StartLimitBurst=3
 [Service]
 WorkingDirectory={{ tilemaker_work_dir }}
 ExecStart={{ tilemaker_work_dir }}/build-mbtiles
+ExecStartPost=systemctl restart tileserver
 RestartSec=10m
 Restart=on-failure
 
