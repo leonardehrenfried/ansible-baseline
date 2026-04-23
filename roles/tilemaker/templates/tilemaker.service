@@ -15,5 +15,9 @@ ExecStopPost=-podman stop tilemaker
 ExecStopPost=-podman rm --force tilemaker
 ExecStopPost=systemd-failure-notification "tilemaker"
 
+{% if tileserver_restart_on_tilemaker_termination %}
+ExecStopPost=systemctl restart tileserver
+{% endif %}
+
 [Install]
 WantedBy=multi-user.target
