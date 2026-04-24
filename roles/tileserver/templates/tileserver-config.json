@@ -7,6 +7,7 @@
       "styles": "/data",
       "mbtiles": "/data"
     },
+    "maxRendererPoolSizes": [4],
     "serveAllFonts": true,
     "tileMargin": {{ tileserver_tile_margin }}
   },

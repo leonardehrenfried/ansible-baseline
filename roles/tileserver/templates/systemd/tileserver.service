@@ -28,6 +28,7 @@ ExecStart=podman run --rm \
             -v {{ tileserver_work_dir }}:/data \
             -p {{ tileserver_port }}:8080 ${CONTAINER_IMAGE} \
             -u https://{{ tileserver_domain }} \
+            --fetch-timeout 60000 \
             --config tileserver-config.json
 
 [Install]
