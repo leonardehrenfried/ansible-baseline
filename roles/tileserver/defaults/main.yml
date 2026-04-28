@@ -18,6 +18,7 @@ tileserver_cache_settings:
 # place in ./templates/tileserver/foo.json
 tileserver_extra_styles: []
 tileserver_extra_sources: []
+tileserver_planned_restart: true
 tileserver_restart_time: "06:00:00"
 tileserver_restart_on_change: true
 
