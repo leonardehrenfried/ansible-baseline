@@ -81,7 +81,7 @@
     - tileserver-restart.timer
   notify: Restart tileserver
 
-- name: Start tileserver and restart every night
+- name: Start tileserver
   systemd:
     name: "{{ item }}"
     state: started
@@ -89,6 +89,14 @@
     daemon_reload: yes
   with_items:
     - tileserver.service
+
+- name: Start tileserver restart timer and restart every night
+  systemd:
+    name: "{{ item }}"
+    state: "{% if tileserver_planned_restart %}started{% else %}stopped{% endif %}"
+    enabled: yes
+    daemon_reload: yes
+  with_items:
     - tileserver-restart.timer
 
 - name: Install healthcheck systemd files
