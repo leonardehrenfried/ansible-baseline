@@ -34,7 +34,3 @@
   ansible.builtin.command: swapon --show
   register: swap_status
   changed_when: false
-
-- name: Display swap status
-  ansible.builtin.debug:
-    var: swap_status.stdout_lines
