@@ -2,3 +2,8 @@
 digitransit_port: 8081
 digitransit_image: "docker.io/lehrenfried/digitransit-ui:latest"
 digitransit_otp_timeout: 12000
+
+loadbalancer_target_port: 8081
+
+digitransit_basic_auth: false
+digitransit_basic_auth_port: 8083

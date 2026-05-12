@@ -6,6 +6,28 @@
     createhome: yes
     shell: /bin/bash
 
+- name: Remove Caddyfile if basic auth is not used
+  ansible.builtin.file:
+    path: /etc/caddy/digitransit.caddy
+    state: absent
+  notify: Restart caddy
+  when: digitransit_basic_auth is false
+
+- name: Create Caddyfile if basic auth is used
+  ansible.builtin.template:
+    src: templates/digitransit.caddy
+    dest: /etc/caddy/
+    owner: caddy
+    group: caddy
+    mode: 0660
+  notify: Restart caddy
+  when: digitransit_basic_auth is true
+
+- name: Override digitransit_port is basic auth is used
+  ansible.builtin.set_fact:
+    digitransit_port: "{{ digitransit_basic_auth_port }}"
+  when: digitransit_basic_auth is true
+
 - name: Install systemd files
   ansible.builtin.template:
     src: systemd/{{ item }}

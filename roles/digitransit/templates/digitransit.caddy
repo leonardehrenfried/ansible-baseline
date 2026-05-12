@@ -1,0 +1,6 @@
+http://routing.mobidata-bw.de:{{ loadbalancer_target_port }}, http://www.routing.mobidata-bw.de:{{ loadbalancer_target_port }} {
+    basic_auth {
+        mobidata-bw $2a$14$8ao9mmkLZDtJ/7EY4Z/o3eVkfiHxX6Dwx36/qBQFJQ5n6nxm15uJK
+    }
+    reverse_proxy localhost:{{ digitransit_basic_auth_port }}
+}
