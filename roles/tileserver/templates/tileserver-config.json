@@ -9,6 +9,7 @@
     },
     "maxRendererPoolSizes": [4],
     "serveAllFonts": true,
+    "maxSize": 1024,
     "tileMargin": {{ tileserver_tile_margin }}
   },
   "styles": {

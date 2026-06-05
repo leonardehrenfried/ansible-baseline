@@ -15,6 +15,9 @@ ExecStartPre=-send-to-matrix "🗺️ Restarting tileserver on {{ matrix_hostnam
 ExecStartPre=-podman stop ${CONTAINER_NAME}
 ExecStartPre=-podman rm ${CONTAINER_NAME}
 
+MemoryHigh=80%
+MemoryMax=90%
+
 # rsync makes sure that it's a noop when the files are the same
 ExecStartPre=-/bin/sh -c 'rsync \
   --progress \
