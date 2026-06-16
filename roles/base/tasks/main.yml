@@ -108,3 +108,22 @@
     state: absent
     remove: yes
   with_items: "{{ removed_users }}"
+
+- name: Create apt-daily-upgrade timer override directory
+  ansible.builtin.file:
+    path: /etc/systemd/system/apt-daily-upgrade.timer.d
+    state: directory
+    mode: "0755"
+    owner: root
+    group: root
+
+- name: Configure apt daily upgrade timer
+  ansible.builtin.template:
+    src: apt-timer-override.conf
+    dest: /etc/systemd/system/apt-daily-upgrade.timer.d/override.conf
+    mode: "0644"
+    owner: root
+    group: root
+  notify:
+    - Reload systemd
+    - Restart apt daily upgrade timer
