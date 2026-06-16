@@ -1,8 +1,8 @@
-- name: reload systemd
+- name: Reload systemd
   ansible.builtin.systemd:
     daemon_reload: true
 
-- name: restart apt daily upgrade timer
+- name: Restart apt daily upgrade timer
   ansible.builtin.systemd:
     name: apt-daily-upgrade.timer
     state: restarted
