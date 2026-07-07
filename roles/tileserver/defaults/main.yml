@@ -8,10 +8,10 @@ tileserver_allowed_referrers:
   - "{{ tileserver_domain }}"
 tileserver_tile_margin: 50
 tileserver_cache_settings:
-  - filetype: png
+  - filetype: '/styles/.*\.png$'
     server_cache: "1d"
     browser_cache: 3600
-  - filetype: pbf
+  - filetype: '/data/.*\.pbf$'
     server_cache: "15m"
     browser_cache: 3600
 # extra styles to be deployed
