@@ -11,9 +11,11 @@ tileserver_cache_settings:
   - location_regex: '/styles/.*\.png$'
     server_cache: "1d"
     browser_cache: 3600
+    error_handling: "/unauthorized.png"
   - location_regex: '/data/.*\.pbf$'
     server_cache: "15m"
     browser_cache: 3600
+    error_handling: "@unauthorized_pbf"
 # extra styles to be deployed
 # place in ./templates/tileserver/foo.json
 tileserver_extra_styles: []
