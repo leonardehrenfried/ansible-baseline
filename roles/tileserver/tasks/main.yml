@@ -71,12 +71,26 @@
   with_items: "{{ tileserver_extra_styles }}"
   notify: "{{ tileserver_restart_on_change | ternary('Restart tileserver', []) }}"
 
+- name: Remove legacy plain-systemd tileserver.service (superseded by quadlet)
+  ansible.builtin.file:
+    path: /etc/systemd/system/tileserver.service
+    state: absent
+  notify: Restart tileserver
+
+- name: Install tileserver quadlet container config
+  template:
+    src: systemd/tileserver.container
+    dest: /etc/containers/systemd/
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart tileserver
+
 - name: Install systemd files
   template:
     src: "systemd/{{ item }}"
     dest: /etc/systemd/system/
   with_items:
-    - tileserver.service
     - tileserver-restart.service
     - tileserver-restart.timer
   notify: Restart tileserver
@@ -99,22 +113,21 @@
   with_items:
     - tileserver-restart.timer
 
-- name: Install healthcheck systemd files
-  template:
-    src: "systemd/{{ item }}"
-    dest: /etc/systemd/system/
+- name: Stop and disable legacy tileserver healthcheck timer
+  ansible.builtin.systemd:
+    name: tileserver-healthcheck.timer
+    state: stopped
+    enabled: no
+  ignore_errors: yes
+
+- name: Remove legacy tileserver healthcheck systemd files
+  ansible.builtin.file:
+    path: "/etc/systemd/system/{{ item }}"
+    state: absent
   with_items:
     - tileserver-healthcheck.service
     - tileserver-healthcheck.timer
-
-- name: Start healthcheck
-  systemd:
-    name: "{{ item }}"
-    state: started
-    enabled: yes
-    daemon_reload: yes
-  with_items:
-    - tileserver-healthcheck.timer
+  notify: Reload systemd daemon
 
 - name: Create tile cache dir
   file:
