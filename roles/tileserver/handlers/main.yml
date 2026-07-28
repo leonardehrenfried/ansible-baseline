@@ -1,8 +1,14 @@
 ---
+- name: Reload systemd daemon
+  ansible.builtin.systemd:
+    daemon_reload: yes
+  listen: "Reload systemd daemon"
+
 - name: Restart tileserver
-  ansible.builtin.service:
+  ansible.builtin.systemd:
     name: tileserver
     state: restarted
+    daemon_reload: yes
   # Ensures a rolling restart by processing only one host at a time
   # The next host will only start once this host has passed the health check
   throttle: 1

@@ -1,0 +1,50 @@
+[Unit]
+Description=Tileserver
+
+StartLimitIntervalSec=2m
+StartLimitBurst=5
+
+[Container]
+Image=docker.io/maptiler/tileserver-gl:{{ tileserver_version }}
+ContainerName=tileserver
+
+Volume={{ tileserver_work_dir }}:/data:z
+PublishPort={{ tileserver_port }}:8080
+
+Exec=-u https://{{ tileserver_domain }} --fetch-timeout 60000 --config tileserver-config.json
+
+LogDriver=journald
+
+# curl is not present in the tileserver-gl image, but node is (it's the
+# app runtime), so use it to check that a tile actually renders
+HealthCmd=node -e "require('http').get('http://127.0.0.1:8080/styles/streets/8/135/87.png',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
+HealthInterval=1m
+HealthTimeout=30s
+HealthRetries=3
+HealthStartPeriod=2m
+HealthOnFailure=restart
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+RestartSec=20
+
+ExecStartPre=-send-to-matrix "🗺️ Restarting tileserver on {{ matrix_hostname }}"
+
+MemoryHigh=70%
+MemoryMax=80%
+
+# Let systemd-oomd restart tileserver eagerly under system-wide memory
+# pressure, rather than only when tileserver itself breaches MemoryMax
+ManagedOOMMemoryPressure=kill
+ManagedOOMMemoryPressureLimit=80%
+
+# rsync makes sure that it's a noop when the files are the same
+ExecStartPre=-/bin/sh -c 'rsync \
+  --progress \
+  --stats \
+  {{ tileserver_mbtiles_path }} \
+  {{ tileserver_work_dir }}/input.mbtiles || send-to-matrix "⚠️ rsync failed on {{ matrix_hostname }}"'
+
+[Install]
+WantedBy=multi-user.target default.target
