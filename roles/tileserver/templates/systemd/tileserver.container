@@ -11,7 +11,7 @@ ContainerName=tileserver
 Volume={{ tileserver_work_dir }}:/data:z
 PublishPort={{ tileserver_port }}:8080
 
-Exec=-u https://{{ tileserver_domain }} --fetch-timeout 60000 --config tileserver-config.json
+Exec=-u https://{{ tileserver_domain }} --config tileserver-config.json
 
 LogDriver=journald
 

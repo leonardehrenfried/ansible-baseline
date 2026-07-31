@@ -12,7 +12,7 @@
     "maxSize": 1024,
     "maxScaleFactor": 2,
     "tileMargin": {{ tileserver_tile_margin }},
-    "leafletRetina": true,
+    "leafletRetina": true
   },
   "styles": {
     "streets": {
