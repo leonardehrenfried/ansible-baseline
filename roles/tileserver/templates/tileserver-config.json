@@ -7,7 +7,7 @@
       "styles": "/data",
       "mbtiles": "/data"
     },
-    "maxRendererPoolSizes": [4],
+    "maxRendererPoolSizes": [2, 2],
     "serveAllFonts": true,
     "maxSize": 1024,
     "maxScaleFactor": 2,
