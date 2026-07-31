@@ -31,7 +31,7 @@ RestartSec=20
 
 ExecStartPre=-send-to-matrix "🗺️ Restarting tileserver on {{ matrix_hostname }}"
 
-MemoryHigh=70%
+MemoryHigh=80%
 MemoryMax=80%
 
 # Let systemd-oomd restart tileserver eagerly under system-wide memory
