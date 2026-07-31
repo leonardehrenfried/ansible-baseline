@@ -113,13 +113,6 @@
   with_items:
     - tileserver-restart.timer
 
-- name: Stop and disable legacy tileserver healthcheck timer
-  ansible.builtin.systemd:
-    name: tileserver-healthcheck.timer
-    state: stopped
-    enabled: no
-  ignore_errors: yes
-
 - name: Remove legacy tileserver healthcheck systemd files
   ansible.builtin.file:
     path: "/etc/systemd/system/{{ item }}"
