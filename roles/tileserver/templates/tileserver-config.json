@@ -26,6 +26,10 @@
           49.794564
         ]
       }
+      {% if streets_serve_rendered is false %}
+      ,
+      "serve_rendered": false
+      {% endif %}
     },
     "satellite-overlay": {
       "style": "satellite-overlay.json",
@@ -38,6 +42,10 @@
           49.794564
         ]
       }
+      {% if satellite_overlay_serve_rendered is false %}
+      ,
+      "serve_rendered": false
+      {% endif %}
     },
     "bicycle": {
       "style": "bicycle.json",
@@ -50,12 +58,17 @@
           49.794564
         ]
       }
+      {% if bicycle_serve_rendered is false %}
+      ,
+      "serve_rendered": false
+      {% endif %}
     }
-{% for style_name in tileserver_extra_styles %}
+{% for extra_style in tileserver_extra_styles %}
     ,
-    "{{ style_name }}": {
-      "style": "{{ style_name }}.json",
-      "serve_data": true
+    "{{ extra_style.name }}": {
+      "style": "{{ extra_style.name }}.json",
+      "serve_data": true,
+      "serve_rendered": {{ extra_style.serve_rendered | tojson }}
     }
 {% endfor %}
   },
