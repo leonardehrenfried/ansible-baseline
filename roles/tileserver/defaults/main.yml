@@ -25,3 +25,7 @@ tileserver_restart_time: "06:00:00"
 tileserver_restart_on_change: true
 
 tileserver_mbtiles_path: "{{ tilemaker_work_dir }}/tilemaker-output.mbtiles"
+
+streets_serve_rendered: true
+bicycle_serve_rendered: true
+satellite_overlay_serve_rendered: true
