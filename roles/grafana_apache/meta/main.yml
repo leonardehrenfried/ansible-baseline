@@ -1,6 +1,0 @@
----
-collections:
-
-dependencies:
-  - role: base
-  - leonardehrenfried.baseline.grafana
