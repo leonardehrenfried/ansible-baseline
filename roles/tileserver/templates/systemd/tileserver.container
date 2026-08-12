@@ -1,7 +1,7 @@
 [Unit]
 Description=Tileserver
 
-StartLimitIntervalSec=2m
+StartLimitIntervalSec=10m
 StartLimitBurst=5
 
 [Container]

@@ -14,6 +14,11 @@
   throttle: 1
   listen: "Restart tileserver"
 
+- name: Reset failure counter for tileserver.service
+  ansible.builtin.shell: |
+    systemctl reset-failed tileserver.service
+  listen: Restart tileserver
+
 - name: Check tileserver is back up
   ansible.builtin.uri:
     url: "http://localhost:{{ tileserver_port }}"
