@@ -24,6 +24,9 @@ HealthRetries=3
 HealthStartPeriod=2m
 HealthOnFailure=restart
 
+# unfortunate workaround for https://github.com/systemd/systemd/issues/41871
+PodmanArgs=--memory=6.4g
+
 [Service]
 TimeoutStartSec=0
 Restart=always
@@ -31,12 +34,13 @@ RestartSec=20
 
 ExecStartPre=-send-to-matrix "🗺️ Restarting tileserver on {{ matrix_hostname }}"
 
-MemoryMax=80%
+# can be re-enabled when https://github.com/systemd/systemd/issues/41871 is resolved
+#MemoryMax=80%
 
 # Let systemd-oomd restart tileserver eagerly under system-wide memory
 # pressure, rather than only when tileserver itself breaches MemoryMax
-ManagedOOMMemoryPressure=kill
-ManagedOOMMemoryPressureLimit=80%
+#ManagedOOMMemoryPressure=kill
+#ManagedOOMMemoryPressureLimit=80%
 
 # rsync makes sure that it's a noop when the files are the same
 ExecStartPre=-/bin/sh -c 'rsync \
