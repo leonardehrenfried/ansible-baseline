@@ -17,12 +17,12 @@ LogDriver=journald
 
 # curl is not present in the tileserver-gl image, but node is (it's the
 # app runtime), so use it to check that a tile actually renders
-HealthCmd=node -e "require('http').get('http://127.0.0.1:8080/styles/streets/8/135/87.png',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
-HealthInterval=1m
-HealthTimeout=30s
-HealthRetries=3
-HealthStartPeriod=2m
-HealthOnFailure=restart
+#HealthCmd=node -e "require('http').get('http://127.0.0.1:8080/styles/streets/8/135/87.png',r=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))"
+#HealthInterval=1m
+#HealthTimeout=30s
+#HealthRetries=3
+#HealthStartPeriod=2m
+#HealthOnFailure=restart
 
 # unfortunate workaround for https://github.com/systemd/systemd/issues/41871
 PodmanArgs=--memory=6.4g
