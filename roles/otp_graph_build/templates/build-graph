@@ -1,5 +1,7 @@
 #! /bin/bash -e
 
+START_TIME=$SECONDS
+
 PBF_FILE="opentripplanner.osm.pbf"
 
 # freely available elevation data in geotiff format (https://srtm.csi.cgiar.org/)
@@ -86,4 +88,7 @@ mkdir -p -m 775 ${OUTPUT_DIR}
 cp ${BUILD_DIR}/graph.obj  ${OUTPUT_DIR}/
 cp ${BUILD_DIR}/router-config.json ${BUILD_DIR}/otp-config.json ${OUTPUT_DIR}
 
-send-to-matrix "📦️ OTP graph build complete on {{ inventory_hostname }}" || true
+ELAPSED=$((SECONDS - START_TIME))
+DURATION=$(printf '%dm%02ds' $((ELAPSED / 60)) $((ELAPSED % 60)))
+
+send-to-matrix "📦️ OTP graph build complete on {{ inventory_hostname }} (took ${DURATION})" || true
