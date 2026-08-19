@@ -4,6 +4,11 @@
     daemon_reload: yes
   listen: "Reload systemd daemon"
 
+- name: Reset failure counter for tileserver.service
+  ansible.builtin.shell: |
+    systemctl reset-failed tileserver.service
+  listen: Restart tileserver
+
 - name: Restart tileserver
   ansible.builtin.systemd:
     name: tileserver
@@ -13,11 +18,6 @@
   # The next host will only start once this host has passed the health check
   throttle: 1
   listen: "Restart tileserver"
-
-- name: Reset failure counter for tileserver.service
-  ansible.builtin.shell: |
-    systemctl reset-failed tileserver.service
-  listen: Restart tileserver
 
 - name: Check tileserver is back up
   ansible.builtin.uri:
