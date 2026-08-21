@@ -17,6 +17,8 @@ datasources:
     url: localhost:5432
     database: {{ postgres_db }}
     user: {{ postgres_username }}
+    jsonData:
+      database: {{ postgres_db }}
     secureJsonData:
       password: {{ postgres_password }}
 {% endif %}
