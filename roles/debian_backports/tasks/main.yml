@@ -1,0 +1,24 @@
+---
+- name: Check if backports suite is already configured elsewhere
+  when: ansible_facts["distribution"] == 'Debian'
+  ansible.builtin.command:
+    cmd: >-
+      grep -rl "{{ ansible_facts['distribution_release'] }}-backports"
+      --exclude=backports.sources
+      /etc/apt/sources.list /etc/apt/sources.list.d/
+  register: existing_backports
+  changed_when: false
+  failed_when: false
+
+- name: Enable Debian backports repository
+  when:
+    - ansible_facts["distribution"] == 'Debian'
+    - existing_backports.stdout == ""
+  ansible.builtin.deb822_repository:
+    name: backports
+    types: deb
+    uris: http://deb.debian.org/debian
+    suites: "{{ ansible_facts['distribution_release'] }}-backports"
+    components: main
+    state: present
+    install_python_debian: true
