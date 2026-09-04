@@ -26,6 +26,7 @@
       - sudo
       - bash-completion
       - cron-apt
+      - unattended-upgrades
     state: present
 
 - name: Install global shell config
