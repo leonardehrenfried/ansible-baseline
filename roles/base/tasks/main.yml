@@ -25,6 +25,7 @@
       - tar
       - sudo
       - bash-completion
+      - cron-apt
     state: present
 
 - name: Install global shell config
