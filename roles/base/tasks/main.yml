@@ -5,13 +5,6 @@
     update_cache: True
     cache_valid_time: 604800
 
-- name: Install Centos-specific packages
-  when: ansible_facts["distribution"] == 'CentOS'
-  package:
-    name:
-      - epel-release
-    state: present
-
 - name: Install base packages
   package:
     name:
