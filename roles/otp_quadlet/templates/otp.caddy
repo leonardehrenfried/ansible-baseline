@@ -1,5 +1,8 @@
 {{ otp_domain_name }} {
-  reverse_proxy /* localhost:{{ otp_port }}
+  reverse_proxy /* localhost:{{ otp_port }} {
+    # only use the X-Forwarded-For headers from trusted source
+    trusted_proxies private_ranges
+  }
 
 {% if otp_prometheus_user is defined %}
   basicauth /otp/actuators/prometheus {
