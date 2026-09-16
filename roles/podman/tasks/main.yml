@@ -16,6 +16,12 @@
       - slirp4netns
       - podman
 
+- name: Install passt
+  when: ansible_facts["distribution"] == 'Debian' and ansible_facts["distribution_major_version"] == '13'
+  ansible.builtin.package:
+    state: latest
+    name: passt
+
 - name: Install systemd files for podman-prune
   template: src={{ item }} dest=/etc/systemd/system/
   with_items:
