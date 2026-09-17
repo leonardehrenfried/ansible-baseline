@@ -40,7 +40,7 @@ do
   fi
 done
 
-{% for item in manual_osm_downloads %}
+{% for item in manual_osm_downloads
 
 PBF_FILE="{{ item.local_name }}"
 PBF_DOWNLOAD_URL="{{ item.url }}"

@@ -1,26 +1,15 @@
 ---
-- name: Install Debian/Ubuntu-specific packages
-  when: ansible_facts["distribution"] == 'Debian' or ansible_facts["distribution"] == 'Ubuntu'
+- name: Install packages
   ansible.builtin.package:
     state: latest
     name:
       - dbus-user-session
       - uidmap
       - catatonit
-
-- name: Install packages
-  ansible.builtin.package:
-    state: latest
-    name:
       - crun
       - slirp4netns
       - podman
-
-- name: Install passt
-  when: ansible_facts["distribution"] == 'Debian' and ansible_facts["distribution_major_version"] == '13'
-  ansible.builtin.package:
-    state: latest
-    name: passt
+      - passt
 
 - name: Install systemd files for podman-prune
   template: src={{ item }} dest=/etc/systemd/system/
