@@ -7,7 +7,7 @@ PBF_FILE=osm.pbf
 RENUMBERED=renumbered.osm.pbf
 TILEMAKER_INPUT_FILE=tilemaker-input.osm.pbf
 
-IMAGE_NAME="ghcr.io/leonardehrenfried/tilemaker:2025-05-16T13-51"
+IMAGE_NAME="{{ tilemaker_image }}"
 CONTAINER_NAME="tilemaker"
 
 TILEMAKER_OUTPUT_FILE=tilemaker-output.inprocess.mbtiles
