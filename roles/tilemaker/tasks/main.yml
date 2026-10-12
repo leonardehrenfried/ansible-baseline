@@ -16,12 +16,27 @@
     group: root
     mode: 0775
 
-- name: Install config and script files
+- name: Install script files
   template: src={{ item }} dest="{{ tilemaker_work_dir }}"
   with_items:
     - build-mbtiles
+  notify: Restart tilemaker
+
+- name: Install config
+  template:
+    src: "{{ item }}"
+    dest: "{{ tilemaker_work_dir }}"
+  with_items:
     - config-openmaptiles.json
   notify: Restart tilemaker
+  when: tilemaker_custom_config_file is not defined
+
+- name: Install custom config
+  ansible.builtin.copy:
+    src: "{{ tilemaker_custom_config_file }}"
+    dest: "{{ tilemaker_work_dir }}config-openmaptiles.json"
+  notify: Restart tilemaker
+  when: tilemaker_custom_config_file is defined
 
 - name: Install Lua script
   template:
