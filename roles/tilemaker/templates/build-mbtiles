@@ -47,10 +47,14 @@ else
   curl $CURL_OPTS "${PBF_DOWNLOAD_URL}" -o ${PBF_FILE}
 fi
 
-# every Sunday we delete the coastline shapefiles and re-download them
-if [[ $(date +"%u") -eq 0 ]]; then
-  echo "Deleting coastline shapefiles"
+# on the first Saturday of the month we delete
+# the coastline shapefiles and osm pbfs files and re-download them
+if [[ $(date +"%u") -eq 6 && $(date +"%-d") -le 7 ]]; then
+  echo "Deleting coastline shapefiles and osm pbf files"
   rm -rf ${OCEAN_SHAPEFILE_FINAL_FOLDER}
+  {% if tilemaker_cleanup %}
+    rm *.pbf
+  {% endif %}
 fi
 
 if [ ! -d "${OCEAN_SHAPEFILE_FINAL_FOLDER}" ]; then
