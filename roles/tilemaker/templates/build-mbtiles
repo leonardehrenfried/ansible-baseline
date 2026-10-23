@@ -93,8 +93,6 @@ podman run \
   -v {{ tilemaker_work_dir }}:/srv \
   -v {{ tilemaker_work_dir }}/coastline:/usr/src/app/coastline \
   --name ${CONTAINER_NAME} \
-  --rm \
-  --cpu-shares 512 \
   ${IMAGE_NAME} /srv/${TILEMAKER_INPUT_FILE} \
   --output=/srv/${TILEMAKER_OUTPUT_FILE} \
   --config=/srv/config-openmaptiles.json \
@@ -105,7 +103,7 @@ podman run \
 {% if tilemaker_renumber %}
   --compact \
 {% endif %}
-  --quiet
+  --rm
 
 # tilemaker doesn't like it when the output file already exists to we move it
 mv "${TILEMAKER_OUTPUT_FILE}" "${TILEMAKER_FINAL_OUTPUT_FILE}"
