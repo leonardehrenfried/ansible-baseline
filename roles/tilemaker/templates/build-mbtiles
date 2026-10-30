@@ -97,6 +97,9 @@ podman run \
   --output=/srv/${TILEMAKER_OUTPUT_FILE} \
   --config=/srv/config-openmaptiles.json \
   --process=/srv/process-openmaptiles.lua \
+{% if tilemaker_memory_high is defined %}
+  --cgroup-conf=memory.high={{ tilemaker_memory_high }} \
+{% endif %}
 {% if tilemaker_use_store %}
   --store=/store.dat \
 {% endif %}
