@@ -90,8 +90,12 @@ rm -f ${TILEMAKER_OUTPUT_FILE}
 # assume that nodes are ordered sequentially, needs osmium renumber
 podman run \
   --pull=newer \
+  --rm \
   -v {{ tilemaker_work_dir }}:/srv \
   -v {{ tilemaker_work_dir }}/coastline:/usr/src/app/coastline \
+{% if tilemaker_memory_high is defined %}
+  --cgroup-conf=memory.high={{ tilemaker_memory_high }} \
+{% endif %}
   --name ${CONTAINER_NAME} \
   ${IMAGE_NAME} /srv/${TILEMAKER_INPUT_FILE} \
   --output=/srv/${TILEMAKER_OUTPUT_FILE} \
@@ -101,9 +105,8 @@ podman run \
   --store=/store.dat \
 {% endif %}
 {% if tilemaker_renumber %}
-  --compact \
+  --compact
 {% endif %}
-  --rm
 
 # tilemaker doesn't like it when the output file already exists to we move it
 mv "${TILEMAKER_OUTPUT_FILE}" "${TILEMAKER_FINAL_OUTPUT_FILE}"
