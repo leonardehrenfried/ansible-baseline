@@ -103,6 +103,7 @@ TILEMAKER_OPTS=(
   --config=/srv/config-openmaptiles.json
   --process=/srv/process-openmaptiles.lua
   --threads=6
+  --shard-stores
 )
 {% if tilemaker_use_store %}
 TILEMAKER_OPTS+=(--store=/store.dat)
