@@ -77,6 +77,7 @@ if [[ ${PBF_FILE} -nt ${TILEMAKER_INPUT_FILE} ]] || [[ ${EXTRACT_GEOJSON} -nt ${
   {% if tilemaker_renumber %}
   echo "Renumbering OSM data"
   osmium renumber ${PBF_FILE} -o ${TILEMAKER_INPUT_FILE} --overwrite
+  echo "Renumbering complete"
   {% else %}
   echo "Skipping renumbering, copying ${PBF_FILE}"
   cp ${PBF_FILE} ${TILEMAKER_INPUT_FILE}
@@ -86,27 +87,33 @@ fi
 
 rm -f ${TILEMAKER_OUTPUT_FILE}
 
-# coastlines need to be placed into the root folder - not where the OSM pbf is!
-# assume that nodes are ordered sequentially, needs osmium renumber
-podman run \
-  --pull=newer \
-  --rm \
-  -v {{ tilemaker_work_dir }}:/srv \
-  -v {{ tilemaker_work_dir }}/coastline:/usr/src/app/coastline \
+PODMAN_OPTS=(
+  --pull=newer
+  --rm
+  -v {{ tilemaker_work_dir }}:/srv
+  -v {{ tilemaker_work_dir }}/coastline:/usr/src/app/coastline
+  --name "${CONTAINER_NAME}"
+)
 {% if tilemaker_memory_high is defined %}
-  --cgroup-conf=memory.high={{ tilemaker_memory_high }} \
+PODMAN_OPTS+=(--cgroup-conf=memory.high={{ tilemaker_memory_high }})
 {% endif %}
-  --name ${CONTAINER_NAME} \
-  ${IMAGE_NAME} /srv/${TILEMAKER_INPUT_FILE} \
-  --output=/srv/${TILEMAKER_OUTPUT_FILE} \
-  --config=/srv/config-openmaptiles.json \
-  --process=/srv/process-openmaptiles.lua \
+
+TILEMAKER_OPTS=(
+  --output=/srv/${TILEMAKER_OUTPUT_FILE}
+  --config=/srv/config-openmaptiles.json
+  --process=/srv/process-openmaptiles.lua
+  --threads=6
+)
 {% if tilemaker_use_store %}
-  --store=/store.dat \
+TILEMAKER_OPTS+=(--store=/store.dat)
 {% endif %}
 {% if tilemaker_renumber %}
-  --compact
+# assumes that nodes are ordered sequentially, needs osmium renumber
+TILEMAKER_OPTS+=(--compact)
 {% endif %}
+
+# coastlines need to be placed into the root folder - not where the OSM pbf is!
+podman run "${PODMAN_OPTS[@]}" "${IMAGE_NAME}" "/srv/${TILEMAKER_INPUT_FILE}" "${TILEMAKER_OPTS[@]}"
 
 # tilemaker doesn't like it when the output file already exists to we move it
 mv "${TILEMAKER_OUTPUT_FILE}" "${TILEMAKER_FINAL_OUTPUT_FILE}"
