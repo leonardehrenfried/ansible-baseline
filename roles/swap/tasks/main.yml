@@ -5,9 +5,26 @@
     name: util-linux
     state: present
 
+- name: Check swap file size
+  ansible.builtin.stat:
+    path: /swapfile
+    get_checksum: false
+  register: swap_file
+
+- name: Disable swap
+  command: swapoff -a
+  become: true
+  when: swap_file.stat.exists and swap_file.stat.size != (swap_size_gb * 1024 ** 3)
+
+- name: Delete swap file
+  file:
+    path: /swapfile
+    state: absent
+  when: swap_file.stat.exists and swap_file.stat.size != (swap_size_gb * 1024 ** 3)
+
 - name: Create swap file
   ansible.builtin.command:
-    cmd: fallocate -l {{ swap_size }} /swapfile
+    cmd: fallocate -l {{ swap_size_gb }}G /swapfile
     creates: /swapfile
   register: swap_created
 
