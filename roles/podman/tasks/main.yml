@@ -60,3 +60,18 @@
     src: storage.conf
     dest: /etc/containers/
   when: podman_root_container_storage_dir is defined
+
+- name: Create podman config folder
+  ansible.builtin.file:
+    path: /etc/containers/containers.conf.d
+    state: directory
+    mode: "0755"
+
+# by default podman writes its container events, including all image labels, to the journal
+- name: Write podman events to a file instead of the journal
+  ansible.builtin.copy:
+    dest: /etc/containers/containers.conf.d/events.conf
+    mode: "0644"
+    content: |
+      [engine]
+      events_logger = "file"
